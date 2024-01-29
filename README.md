@@ -1,25 +1,24 @@
 # UniMem
 ## 1 Introduction
 This is the implementation of UniMem described in the paper "**UniMem: Redesigning Disaggregated Memory within A Unified Local-Remote Memory Hierarchy**". UniMem is a cache-coherent-based DM system that proposes a unified local-remote memory hierarchy to remove extra indirection layer on remote memory access path.
-We implement CacheKV based on [NoveLSM] (https://github.com/sudarsunkannan/lsm_nvm).
+We gather the memory access operations, memory address and access data size of the workload using Intel Pin(https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.30-98830-g1d7b601b3-gcc-linux.tar.gz)
 
-## 2 Compilation and Run CacheKV
+## 2 Compilation and Run UniMem
 ### 2.1 Tools
-CacheKV relies on Intel(R) RDT Software Package (https://github.com/intel/intel-cmt-cat).
-To run CacheKV, please install it first (https://github.com/intel/intel-cmt-cat/blob/master/INSTALL).
+UniMem execute Yahoo Cloud Serving Benchmark (YCSB) workloads(http://github.com/brianfrankcooper/YCSB).
+We also take advantage of Kona(https://github.com/project-kona/apps).
 
 ### 2.2 Compilation
 The GCC version in our environment is 7.5.0.
 ```
-  $ cd hoard
-  $ ./compile_install_hoard.sh
+  $ cd tool
+  $ ./setup.sh
   $ cd ..
-  $ make -j8
 ```
 
 ### 2.3 Run
-First set the environment variables and then run the DB_Bench benchmark.
+First set the environment variables and then run the UniMem.
 ```
-  $ source scripts/setvars.sh
-  $ scripts/run_cachekv_dbbench.sh
+  $ cd src
+  $ ./run.sh
 ```
