@@ -60,7 +60,7 @@ pid_redis=0
     ./bin/ycsb run redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"
     kill $pid_redis
     mkdir ../../src/YCSB-A
-    mv pinatrace.out ../../src/YCSB-A/ycsb-a.out
+    mv pinatrace.out ../../src/YCSB-A/ycsb_a.out
 
     ../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf & pid_redis=$!
     echo "----------------redis pid="$pid_redis" workload="YCSB-B""
@@ -71,7 +71,7 @@ pid_redis=0
     ./bin/ycsb run redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"
     kill $pid_redis
     mkdir ../../src/YCSB-B
-    mv pinatrace.out ../../src/YCSB-B/ycsb-b.out
+    mv pinatrace.out ../../src/YCSB-B/ycsb_b.out
     cd ../
 
     #Generate memory access sequence of Memcached
@@ -83,8 +83,8 @@ pid_redis=0
     ./mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500000 -u 1
     #./mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1
     kill $pid_redis
-    mkdir ../src/Memcached
-    mv pinatrace.out ../src/Memcached/memcached.out
+    mkdir ../src/Memcache
+    mv pinatrace.out ../src/Memcache/memcache.out
 
     ./apps/redis/redis/src/redis-server ./apps/redis/redis/redis.conf & pid_redis=$!
     echo "----------------redis pid="$pid_redis" workload="Redis Rand""
