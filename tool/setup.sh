@@ -76,24 +76,24 @@ pid_redis=0
     cd ../
 
     #Generate memory access sequence of Memcached
-    memcached -m 20480 -u root & pid_redis=$!
+    sudo memcached -m 20480 -u root & pid_redis=$!
     echo "----------------redis pid="$pid_redis" workload="Memcached""
     sleep 2s
-    ./pintool/pin -pid $pid_redis -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
+    sudo ./pintool/pin -pid $pid_redis -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
     echo "----------------bef run"
     ./mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500000 -u 1
     #./mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1
-    kill $pid_redis
+    sudo kill $pid_redis
     mkdir ../src/Memcache
     mv pinatrace.out ../src/Memcache/memcache.out
 
-    ./apps/redis/redis/src/redis-server ./apps/redis/redis/redis.conf & pid_redis=$!
+    sudo ./apps/redis/redis/src/redis-server ./apps/redis/redis/redis.conf & pid_redis=$!
     echo "----------------redis pid="$pid_redis" workload="Redis Rand""
     sleep 2s
-    ./pintool/pin -pid $pid_redis -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
+    sudo ./pintool/pin -pid $pid_redis -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
     memtier_benchmark -p 6379 -t 10 -n 400000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000
     #memtier_benchmark -p 6379 -t 10 -n 400 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000
-    kill $pid_redis
+    sudo kill $pid_redis
     mkdir ../src/Redis
     mv pinatrace.out ../src/Redis/redis.out
 
