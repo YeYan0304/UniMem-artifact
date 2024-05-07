@@ -52,25 +52,25 @@ pid_redis=0
 
     #Generate memory access sequence of YCSB-A and YCSB-B
     cd YCSB/
-    ../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf & pid_redis=$!
+    sudo ../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf & pid_redis=$!
     echo "----------------redis pid="$pid_redis" workload="YCSB-A""
     sleep 2s
-    ./bin/ycsb load redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"
-    ../pintool/pin -pid $pid_redis -t ../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
+    sudo ./bin/ycsb load redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"
+    sudo ../pintool/pin -pid $pid_redis -t ../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
     echo "----------------bef run"
-    ./bin/ycsb run redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"
-    kill $pid_redis
+    sudo ./bin/ycsb run redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"
+    sudo kill $pid_redis
     mkdir ../../src/YCSB-A
     mv pinatrace.out ../../src/YCSB-A/ycsb_a.out
 
-    ../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf & pid_redis=$!
+    sudo ../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf & pid_redis=$!
     echo "----------------redis pid="$pid_redis" workload="YCSB-B""
     sleep 2s
-    ./bin/ycsb load redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"
-    ../pintool/pin -pid $pid_redis -t ../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
+    sudo ./bin/ycsb load redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"
+    sudo ../pintool/pin -pid $pid_redis -t ../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so
     echo "----------------bef run"
-    ./bin/ycsb run redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"
-    kill $pid_redis
+    sudo ./bin/ycsb run redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"
+    sudo kill $pid_redis
     mkdir ../../src/YCSB-B
     mv pinatrace.out ../../src/YCSB-B/ycsb_b.out
     cd ../
