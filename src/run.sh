@@ -30,6 +30,7 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     g++ -g -o ./YCSB-B/l3-cache ./main/L3-Cache.cpp
     ./YCSB-B/l3-cache ./YCSB-B/ycsb_b.out ./YCSB-B/ycsb_b-cache_miss
     rm ./YCSB-B/l3-cache
+    mkdir mix
     g++ -g -o ./mix/l3-cache ./main/L3-Cache-mix.cpp
     ./mix/l3-cache ./Redis/redis.out ./Memcache/memcache.out ./Pagerank/pagerank.out ./YCSB-A/ycsb_a.out ./mix/mix-cache_miss
     rm ./mix/l3-cache
@@ -82,6 +83,13 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     rm count-*
     echo "counting the number of pages under different subpages finished"
 
+    chmod +x ./main/run-Page-cache.sh
+    chmod +x ./main/run-Kona.sh
+    chmod +x ./main/run-Unimem.sh
+    chmod +x ./main/run-Unimem-LRU-proportion.sh
+    chmod +x ./main/run-Unimem-nopromote.sh
+    chmod +x ./main/run-Unimem-set.sh
+    chmod +x ./main/run-Unimem-subpage.sh
     echo "run Facebook-ETC..." 
     cd Memcache
     second_line=$(sed -n '2p' memcache-count-128)
@@ -310,11 +318,11 @@ UniMem_AMAT(){
 DA(){
     local count_file=$1
     last_line=$(tail -n 1 "$count_file")
-    memory_size=$(echo "$last_line" | sed -n 's/memory_size:\(.*\)B/\1/p')
+    memory_size=$(echo "$last_line" | sed -n 's/#memory_size:\(.*\)B/\1/p')
     local out_file=$2
-    if [[ $out_file == *FIFO* ]]; then
+    if [[ $out_file == *Kona* ]]; then
         local page_fault=$(($(wc -l < $out_file) - 2))
-    elif [[ $out_file == *LRU* ]]; then
+    elif [[ $out_file == *Pagecache* ]]; then
         local page_fault=$(($(wc -l < $out_file) - 6))
     elif [[ $out_file == *nopromote* ]]; then
         local page_fault=$(($(wc -l < $out_file) - 6))    
@@ -337,11 +345,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-100out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-75out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-50out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-25out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-10out)" >>  Facebook-ETC
+    	  echo -e "$i\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-100out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-75out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-50out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-25out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-10out)" >>  Facebook-ETC
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-LRU-100out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-LRU-75out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-LRU-50out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-LRU-25out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-LRU-10out)" >>  Facebook-ETC
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-100out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-75out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-50out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-25out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-10out)" >>  Facebook-ETC
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-100out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-75out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-50out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-25out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-FIFO-10out)" >>  Facebook-ETC
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-100out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-75out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-50out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-25out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-10out)" >>  Facebook-ETC
     elif [[ $i == UniMem-NoPromote ]]; then
         echo -e "$i\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-10out)" >>  Facebook-ETC
 	elif [[ $i == UniMem ]]; then
@@ -353,11 +361,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-100out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-75out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-50out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-25out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-10out)" >>  Redis-Rand
+    	  echo -e "$i\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-100out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-75out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-50out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-25out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-10out)" >>  Redis-Rand
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-LRU-100out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-LRU-75out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-LRU-50out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-LRU-25out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-LRU-10out)" >>  Redis-Rand
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-100out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-75out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-50out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-25out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-10out)" >>  Redis-Rand
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-100out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-75out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-50out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-25out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-FIFO-10out)" >>  Redis-Rand
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-100out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-75out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-50out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-25out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-10out)" >>  Redis-Rand
     elif [[ $i == UniMem-NoPromote ]]; then
         echo -e "$i\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-10out)" >>  Redis-Rand
 	elif [[ $i == UniMem ]]; then
@@ -369,11 +377,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-100out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-75out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-50out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-25out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-10out)" >>  YCSB-A
+    	  echo -e "$i\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-100out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-75out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-50out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-25out)\t$(Kona_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-10out)" >>  YCSB-A
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-LRU-100out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-LRU-75out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-LRU-50out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-LRU-25out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-LRU-10out)" >>  YCSB-A
+    	  echo -e "$i\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Pagecache-100out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Pagecache-75out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Pagecache-50out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Pagecache-25out)\t$(Kona_PC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Pagecache-10out)" >>  YCSB-A
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-100out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-75out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-50out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-25out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-FIFO-10out)" >>  YCSB-A
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-100out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-75out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-50out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-25out)\t$(SR_RB_4SC_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Kona-10out)" >>  YCSB-A
     elif [[ $i == UniMem-NoPromote ]]; then
         echo -e "$i\t$(UniMem_NoPromote_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-nopromote-10out)" >>  YCSB-A
 	elif [[ $i == UniMem ]]; then
@@ -385,11 +393,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-100out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-75out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-50out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-25out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-10out)" >>  YCSB-B
+    	  echo -e "$i\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-100out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-75out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-50out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-25out)\t$(Kona_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-10out)" >>  YCSB-B
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-LRU-100out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-LRU-75out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-LRU-50out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-LRU-25out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-LRU-10out)" >>  YCSB-B
+    	  echo -e "$i\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Pagecache-100out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Pagecache-75out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Pagecache-50out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Pagecache-25out)\t$(Kona_PC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Pagecache-10out)" >>  YCSB-B
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-100out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-75out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-50out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-25out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-FIFO-10out)" >>  YCSB-B
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-100out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-75out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-50out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-25out)\t$(SR_RB_4SC_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Kona-10out)" >>  YCSB-B
     elif [[ $i == UniMem-NoPromote ]]; then
         echo -e "$i\t$(UniMem_NoPromote_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../YCSB-B/ycsb_b-cache_miss ../YCSB-B/ycsb_b-Unimem-nopromote-10out)" >>  YCSB-B
 	elif [[ $i == UniMem ]]; then
@@ -401,11 +409,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-100out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-75out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-50out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-25out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-10out)" >>  Page-Rank
+    	  echo -e "$i\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-100out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-75out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-50out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-25out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-10out)" >>  Page-Rank
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-LRU-100out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-LRU-75out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-LRU-50out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-LRU-25out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-LRU-10out)" >>  Page-Rank
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-100out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-75out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-50out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-25out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-10out)" >>  Page-Rank
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-100out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-75out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-50out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-25out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-FIFO-10out)" >>  Page-Rank
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-100out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-75out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-50out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-25out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-10out)" >>  Page-Rank
     elif [[ $i == UniMem-NoPromote ]]; then
         echo -e "$i\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-10out)" >>  Page-Rank
 	elif [[ $i == UniMem ]]; then
@@ -417,11 +425,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-100out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-75out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-50out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-25out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-10out)" >>  Linear-Regression
+    	  echo -e "$i\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-100out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-75out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-50out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-25out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-10out)" >>  Linear-Regression
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-LRU-100out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-LRU-75out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-LRU-50out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-LRU-25out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-LRU-10out)" >>  Linear-Regression
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-100out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-75out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-50out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-25out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-10out)" >>  Linear-Regression
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-100out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-75out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-50out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-25out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-FIFO-10out)" >>  Linear-Regression
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-100out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-75out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-50out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-25out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-10out)" >>  Linear-Regression
     elif [[ $i == UniMem-NoPromote ]]; then
         echo -e "$i\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-10out)" >>  Linear-Regression
 	elif [[ $i == UniMem ]]; then
@@ -439,9 +447,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-FIFO-100out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-FIFO-75out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-FIFO-50out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-FIFO-25out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-FIFO-10out 4096)" >>  Facebook-ETC
+    	echo -e "$i\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-100out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-75out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-50out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-25out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-10out 4096)" >>  Facebook-ETC
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-LRU-100out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-LRU-75out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-LRU-50out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-LRU-25out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-LRU-10out 4096)" >>  Facebook-ETC
+        echo -e "$i\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-100out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-75out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-50out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-25out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-10out 4096)" >>  Facebook-ETC
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-100out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-75out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-50out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-25out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-10out 512)" >>  Facebook-ETC
     fi
@@ -451,9 +459,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Redis/redis-count-4k ../Redis/redis-FIFO-100out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-FIFO-75out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-FIFO-50out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-FIFO-25out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-FIFO-10out 4096)" >>  Redis-Rand
+    	echo -e "$i\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-100out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-75out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-50out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-25out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-10out 4096)" >>  Redis-Rand
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Redis/redis-count-4k ../Redis/redis-LRU-100out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-LRU-75out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-LRU-50out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-LRU-25out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-LRU-10out 4096)" >>  Redis-Rand
+        echo -e "$i\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-100out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-75out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-50out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-25out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-10out 4096)" >>  Redis-Rand
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-100out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-75out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-50out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-25out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-10out 512)" >>  Redis-Rand
     fi
@@ -463,9 +471,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-FIFO-100out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-FIFO-75out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-FIFO-50out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-FIFO-25out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-FIFO-10out 4096)" >>  YCSB-A
+    	echo -e "$i\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Kona-100out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Kona-75out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Kona-50out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Kona-25out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Kona-10out 4096)" >>  YCSB-A
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-LRU-100out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-LRU-75out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-LRU-50out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-LRU-25out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-LRU-10out 4096)" >>  YCSB-A
+        echo -e "$i\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Pagecache-100out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Pagecache-75out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Pagecache-50out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Pagecache-25out 4096)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Pagecache-10out 4096)" >>  YCSB-A
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-100out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-75out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-50out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-25out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-10out 512)" >>  YCSB-A
     fi
@@ -475,9 +483,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-FIFO-100out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-FIFO-75out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-FIFO-50out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-FIFO-25out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-FIFO-10out 4096)" >>  YCSB-B
+    	echo -e "$i\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Kona-100out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Kona-75out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Kona-50out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Kona-25out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Kona-10out 4096)" >>  YCSB-B
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-LRU-100out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-LRU-75out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-LRU-50out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-LRU-25out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-LRU-10out 4096)" >>  YCSB-B
+        echo -e "$i\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Pagecache-100out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Pagecache-75out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Pagecache-50out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Pagecache-25out 4096)\t$(DA ../YCSB-B/ycsb_b-count-4k ../YCSB-B/ycsb_b-Pagecache-10out 4096)" >>  YCSB-B
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../YCSB-B/ycsb_b-count-512 ../YCSB-B/ycsb_b-Unimem-100out 512)\t$(DA ../YCSB-B/ycsb_b-count-512 ../YCSB-B/ycsb_b-Unimem-75out 512)\t$(DA ../YCSB-B/ycsb_b-count-512 ../YCSB-B/ycsb_b-Unimem-50out 512)\t$(DA ../YCSB-B/ycsb_b-count-512 ../YCSB-B/ycsb_b-Unimem-25out 512)\t$(DA ../YCSB-B/ycsb_b-count-512 ../YCSB-B/ycsb_b-Unimem-10out 512)" >>  YCSB-B
     fi
@@ -487,9 +495,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-FIFO-100out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-FIFO-75out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-FIFO-50out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-FIFO-25out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-FIFO-10out 4096)" >>  Page-Rank
+    	echo -e "$i\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-100out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-75out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-50out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-25out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-10out 4096)" >>  Page-Rank
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-LRU-100out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-LRU-75out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-LRU-50out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-LRU-25out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-LRU-10out 4096)" >>  Page-Rank
+        echo -e "$i\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-100out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-75out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-50out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-25out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-10out 4096)" >>  Page-Rank
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-100out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-75out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-50out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-25out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-10out 512)" >>  Page-Rank
     fi
@@ -499,9 +507,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Metis/metis-count-4k ../Metis/metis-FIFO-100out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-FIFO-75out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-FIFO-50out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-FIFO-25out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-FIFO-10out 4096)" >>   Linear-Regression
+    	echo -e "$i\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-100out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-75out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-50out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-25out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-10out 4096)" >>   Linear-Regression
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Metis/metis-count-4k ../Metis/metis-LRU-100out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-LRU-75out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-LRU-50out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-LRU-25out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-LRU-10out 4096)" >>   Linear-Regression
+        echo -e "$i\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-100out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-75out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-50out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-25out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-10out 4096)" >>   Linear-Regression
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-100out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-75out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-50out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-25out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-10out 512)" >>   Linear-Regression
     fi
@@ -517,9 +525,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-FIFO-100out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-FIFO-75out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-FIFO-50out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-FIFO-25out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-FIFO-10out)" >>  AMAT
+    	  echo -e "$i\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-100out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-75out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-50out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-25out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-10out)" >>  AMAT
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-LRU-100out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-LRU-75out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-LRU-50out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-LRU-25out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-LRU-10out)" >>  AMAT
+    	  echo -e "$i\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-100out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-75out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-50out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-25out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-10out)" >>  AMAT
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-100out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-75out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-50out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-25out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-10out)" >>  AMAT
     fi
@@ -529,9 +537,9 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../mix/mix-count-4k ../mix/mix-FIFO-100out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-FIFO-75out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-FIFO-50out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-FIFO-25out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-FIFO-10out 4096)" >>  DA
+    	echo -e "$i\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-100out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-75out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-50out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-25out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-10out 4096)" >>  DA
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../mix/mix-count-4k ../mix/mix-LRU-100out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-LRU-75out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-LRU-50out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-LRU-25out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-LRU-10out 4096)" >>  DA
+        echo -e "$i\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-100out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-75out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-50out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-25out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-10out 4096)" >>  DA
 	elif [[ $i == UniMem ]]; then
 	    echo -e "$i\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-100out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-75out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-50out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-25out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-10out 512)" >>  DA
     fi
