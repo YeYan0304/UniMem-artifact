@@ -3,7 +3,7 @@
 
 #define CAPACITY 4
 #define SUBPAGE 0xfff
-#define INDEX 16
+#define INDEX 97
 
 unsigned long long access = 0;
 unsigned long long write_back = 0;

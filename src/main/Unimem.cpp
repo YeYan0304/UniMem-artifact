@@ -4,7 +4,7 @@
 #include <map>
 #include <bitset>
 
-#define CAPACITY 237
+#define CAPACITY 2739
 #define BIP_CAPACITY CAPACITY * 8 * 0.7
 #define LRU_CAPACITY CAPACITY * 0.3
 #define ACTIVE (BIP_CAPACITY * 9 / 10)

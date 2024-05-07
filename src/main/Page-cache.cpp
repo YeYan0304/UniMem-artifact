@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <malloc.h>
 
-#define CAPACITY 66
+#define CAPACITY 389
 // size of inactive_list = (CAPACITY + 1) / 2
 // size of active_list = CAPACITY / 2
 #define SUBPAGE 0xfff
