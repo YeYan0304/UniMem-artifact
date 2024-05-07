@@ -23,6 +23,7 @@ pid_redis=0
     apt-get install scons libevent-dev gengetopt libzmq-dev
     cd mutilate/
     scons
+    cd ../
 
     #download apps
     git clone https://github.com/project-kona/apps.git  
