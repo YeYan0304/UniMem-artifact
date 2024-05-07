@@ -114,9 +114,9 @@ int main(int argc, char* argv[])
 			line += tmp_line;
 
 	}
-	fprintf(fp, "页面大小为：%dKB\n", (SUBPAGE + 1) / 1024);
-	fprintf(fp, "页面数为：%lf\n", count);
-	fprintf(fp, "内存占用大小为：%lfKB\n", (SUBPAGE + 1) * count / 1024);
+	fprintf(fp, "#page_size:%dB\n", SUBPAGE + 1);
+	fprintf(fp, "#page_num:%.0lf\n", count);
+	fprintf(fp, "#memory_size:%lfKB\n", (SUBPAGE + 1) * count / 1024);
 
 	while (countlist->size) {
 		listDeleteTail(countlist);

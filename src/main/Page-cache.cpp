@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <malloc.h>
 
-#define CAPACITY 2150
+#define CAPACITY 66
 // size of inactive_list = (CAPACITY + 1) / 2
 // size of active_list = CAPACITY / 2
 #define SUBPAGE 0xfff
@@ -433,7 +433,7 @@ int main(int argc, char* argv[])
 
 	fprintf(fp, "#active_size: %u \n", active_size);
 	fprintf(fp, "#inactive_size: %u \n", inactive_size);
-	fprintf(fp, "页面访问次数： %llu\n", access);
+	fprintf(fp, "#page_access: %llu\n", access);
 	fprintf(fp, "#active_hit:  %llu \n", active_hit);
 	fprintf(fp, "#inactive_hit:  %llu \n", inactive_hit);
 	fprintf(fp, "#write_back:  %llu \n", write_back);

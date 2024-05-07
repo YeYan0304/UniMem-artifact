@@ -5,7 +5,7 @@
 #include <bitset>
 #include <iostream>
 
-#define CAPACITY 11946
+#define CAPACITY 692
 #define ACTIVE (CAPACITY * 9 / 10)
 #define INACTIVE ((CAPACITY + 9) / 10)
 #define CANDIDATE (CAPACITY * 9 / 10)
@@ -587,7 +587,7 @@ int main(int argc, char* argv[])
 	}
 	free(cache);
 
-	fprintf(fp, "#页面访问次数： %llu\n", access);
+	fprintf(fp, "#page_access: %llu\n", access);
 	fprintf(fp, "#page_fault:  %llu \n", page_fault);
 	fprintf(fp, "#active_hit:  %llu \n", active_hit);
 	fprintf(fp, "#inactive_hit:  %llu \n", inactive_hit);

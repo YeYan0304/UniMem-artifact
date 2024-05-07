@@ -4,7 +4,7 @@
 #include <map>
 #include <bitset>
 
-#define CAPACITY 9303
+#define CAPACITY 237
 #define BIP_CAPACITY CAPACITY * 8 * 0.7
 #define LRU_CAPACITY CAPACITY * 0.3
 #define ACTIVE (BIP_CAPACITY * 9 / 10)
@@ -933,7 +933,7 @@ int main(int argc, char* argv[])
 	fprintf(fp, "#active_hit:  %llu \n", active_hit);
 	fprintf(fp, "#inactive_hit:  %llu \n", inactive_hit);
 	fprintf(fp, "#candidate_hit:  %llu \n", candidate_hit);
-	fprintf(fp, "#LRU_hit： %llu\n", lru_hit);
+	fprintf(fp, "#LRU_hit: %llu\n", lru_hit);
 	fprintf(fp, "#promote_num:  %llu \n", promote_num);
 	fprintf(fp, "#write_back_512:  %llu \n", write_back_512);
 	fprintf(fp, "#write_back_4k:  %llu \n", write_back_4k);

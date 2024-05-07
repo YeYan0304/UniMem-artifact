@@ -4,7 +4,7 @@
 #include <map>
 #include <bitset>
 
-#define CAPACITY 0
+#define CAPACITY 2494
 #define SUBPAGE 0xfff
 #define PAGE 0xfff
 #define INDEX 0x0
@@ -936,7 +936,7 @@ int main(int argc, char* argv[])
 	fprintf(fp, "#active_hit:  %llu \n", active_hit);
 	fprintf(fp, "#inactive_hit:  %llu \n", inactive_hit);
 	fprintf(fp, "#candidate_hit:  %llu \n", candidate_hit);
-	fprintf(fp, "#LRU_hit： %llu\n", lru_hit);
+	fprintf(fp, "#LRU_hit: %llu\n", lru_hit);
 	fprintf(fp, "#promote_num:  %llu \n", promote_num);
 	fprintf(fp, "#write_back_512:  %llu \n", write_back_512);
 	fprintf(fp, "#write_back_4k:  %llu \n", write_back_4k);

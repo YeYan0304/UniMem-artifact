@@ -3,7 +3,7 @@
 
 #define CAPACITY 4
 #define SUBPAGE 0xfff
-#define INDEX 537
+#define INDEX 16
 
 unsigned long long access = 0;
 unsigned long long write_back = 0;
@@ -297,8 +297,8 @@ int main(int argc, char* argv[])
 	}
 	free(cache);
 
-	fprintf(fp, "页面访问次数： %llu\n", access);
-	fprintf(fp, "write_back： %llu\n", write_back);
+	fprintf(fp, "#page_access: %llu\n", access);
+	fprintf(fp, "#write_back: %llu\n", write_back);
 
 	fclose(fp);
 	fclose(trace);
