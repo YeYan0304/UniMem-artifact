@@ -83,13 +83,6 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     rm count-*
     echo "counting the number of pages under different subpages finished"
 
-    chmod +x ./main/run-Page-cache.sh
-    chmod +x ./main/run-Kona.sh
-    chmod +x ./main/run-Unimem.sh
-    chmod +x ./main/run-Unimem-LRU-proportion.sh
-    chmod +x ./main/run-Unimem-nopromote.sh
-    chmod +x ./main/run-Unimem-set.sh
-    chmod +x ./main/run-Unimem-subpage.sh
     echo "run Facebook-ETC..." 
     cd Memcache
     second_line=$(sed -n '2p' memcache-count-128)
