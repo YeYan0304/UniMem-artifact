@@ -15,6 +15,7 @@ The GCC version in our environment is 7.5.0.
   $ ./setup.sh
   $ cd ..
 ```
+You may need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
 
 ### 2.3 Run
 First set the environment variables and then run the UniMem.
