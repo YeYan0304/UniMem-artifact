@@ -331,8 +331,8 @@ DA(){
     # calculate and generate results
     echo "generating results of Average Memory Access Time..."
     systems=(Kona Kona-PC SR\&RB-4SC UniMem-NoPromote UniMem)
-    mkdir Average_Memory_Access_Time
-    cd Average_Memory_Access_Time
+    mkdir 4.2_Average_Memory_Access_Time
+    cd 4.2_Average_Memory_Access_Time
     echo "generating Average Memory Access Time results of Facebook-ETC"
     echo -e "local_cache_size\t100%\t75%\t50%\t25%\t10%" > Facebook-ETC
     for i in ${systems[@]}
@@ -433,8 +433,8 @@ DA(){
 
     echo "generating results of Data Amplification..."
     systems=(Kona Kona-PC UniMem)
-    mkdir Data_Amplification
-    cd Data_Amplification
+    mkdir 4.3_Data_Amplification
+    cd 4.3_Data_Amplification
     echo "generating Data Amplification results of Facebook-ETC"
     echo -e "local_cache_size\t100%\t75%\t50%\t25%\t10%" > Facebook-ETC
     for i in ${systems[@]}
@@ -511,8 +511,8 @@ DA(){
 
     echo "generating results of Mixed Workload..."
     systems=(Kona Kona-PC UniMem)
-    mkdir Mixed_Workload
-    cd Mixed_Workload
+    mkdir 4.4_Mixed_Workload
+    cd 4.4_Mixed_Workload
     echo "generating Average Memory Access Time results of Mixed Workload"
     echo -e "local_cache_size\t100%\t75%\t50%\t25%\t10%" > AMAT
     for i in ${systems[@]}
@@ -540,8 +540,8 @@ DA(){
     cd ../
 
     echo "generating results of Cache Block Size..."
-    mkdir Cache_Block_Size
-    cd Cache_Block_Size
+    mkdir 4.5_Cache_Block_Size
+    cd 4.5_Cache_Block_Size
     echo "generating Average Memory Access Time results of Redis-Rand"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Redis-Rand-AMAT
     echo -e "AMAT\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-4k-10out)" >> Redis-Rand-AMAT
@@ -569,8 +569,8 @@ DA(){
     cd ../
 
     echo "generating results of Host Memory Capacity..."
-    mkdir  Host_Memory_Capacity
-    cd Host_Memory_Capacity
+    mkdir  4.6_Host_Memory_Capacity
+    cd 4.6_Host_Memory_Capacity
     echo -e "host_memory_capacity\t0\t10%\t20%\t30%\t40%\t50%\t60%\t70%\t80%" > Host_Memory_Capacity-AMAT
     echo -e "Redis-Rand\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-9-1-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-8-2-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-7-3-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-6-4-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-5-5-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-4-6-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-3-7-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT
     echo -e "Page-Rank\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-9-1-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-8-2-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-7-3-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-6-4-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-5-5-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-4-6-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-3-7-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT
@@ -579,8 +579,8 @@ DA(){
     cd ../
 
     echo "generating results of Set Associativity..."
-    mkdir Set_Associativity
-    cd Set_Associativity
+    mkdir 4.7_Set_Associativity
+    cd 4.7_Set_Associativity
     echo -e "Set Associativity\t1\t4\t8\t16" > Set_Associativity-AMAT
     echo "generating Average Memory Access Time results of Redis-Rand"
     echo -e "Redis-Rand\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-4set-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-8set-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-16set-10out)" >> Set_Associativity-AMAT
