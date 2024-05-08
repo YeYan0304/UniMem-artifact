@@ -23,3 +23,4 @@ First set the environment variables and then run the UniMem.
   $ cd src
   $ ./run.sh
 ```
+The results will be saved in folders named after the experimental section of the paper.
