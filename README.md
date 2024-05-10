@@ -10,6 +10,7 @@ We also take advantage of Kona(https://github.com/project-kona/apps).
 
 ### 2.2 Compilation
 The GCC version in our environment is 7.5.0.
+The following operations need to be performed under the root user:
 ```
   $ cd tool
   $ ./setup.sh
