@@ -64,8 +64,11 @@ pid_redis=0
     # modify recordcount and operationcount in YCSB/workloads/workloada for workingset size (200000 in our evaluation)
     sed -i "s/"recordcount=[0-9]*"/"recordcount=200000"/" ./YCSB/workloads/workloada
     sed -i "s/"operationcount=[0-9]*"/"operationcount=200000"/" ./YCSB/workloads/workloada
+    sleep 1s
     tmux send-keys -t session2 './bin/ycsb load redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"' C-m
     tmux send-keys -t session2 '../pintool/pin -pid '$pid_redis' -t ../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so' C-m
+    # A redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out error may occur.
+    # When this error occurs, you may need to rerun the program several times.
     tmux send-keys -t session2 './bin/ycsb run redis -s -P ./workloads/workloada -p "redis.host=127.0.0.1" -p "redis.port=6379"' C-m
 
     tmux send-keys -t session2 'wait' C-m
@@ -89,8 +92,11 @@ pid_redis=0
     # modify recordcount and operationcount in YCSB/workloads/workloadb for workingset size (200000 in our evaluation)
     sed -i "s/"recordcount=[0-9]*"/"recordcount=200000"/" ./YCSB/workloads/workloadb
     sed -i "s/"operationcount=[0-9]*"/"operationcount=200000"/" ./YCSB/workloads/workloadb
+    sleep 1s
     tmux send-keys -t session2 './bin/ycsb load redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"' C-m
     tmux send-keys -t session2 '../pintool/pin -pid '$pid_redis' -t ../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so' C-m
+    # A redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out error may occur.
+    # When this error occurs, you may need to rerun the program several times.
     tmux send-keys -t session2 './bin/ycsb run redis -s -P ./workloads/workloadb -p "redis.host=127.0.0.1" -p "redis.port=6379"' C-m
 
     tmux send-keys -t session2 'wait' C-m
@@ -135,7 +141,7 @@ pid_redis=0
         fi
     done
 
-
+    #Generate memory access sequence of Redis
     tmux send-keys -t session1 './apps/redis/redis/src/redis-server ./apps/redis/redis/redis.conf' C-m
     sleep 2s
     pid_redis=$(pidof redis-server)
@@ -159,6 +165,7 @@ pid_redis=0
         fi
     done
 
+    sleep 1s
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
     current_session=$(tmux display-message -p '#S')
