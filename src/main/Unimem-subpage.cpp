@@ -11,10 +11,10 @@
 #define PROMOTE_THRESHOLD ((PAGE + 1)/(SUBPAGE + 1))
 
 using namespace std;
-//unsigned long long BIP_CAPACITY = 1 * CAPACITY;
-//unsigned long long LRU_CAPACITY = 0 * CAPACITY / ((PAGE + 1)/(SUBPAGE + 1));
-unsigned long long BIP_CAPACITY = 0.7 * CAPACITY;
-unsigned long long LRU_CAPACITY = 0.3 * CAPACITY / ((PAGE + 1)/(SUBPAGE + 1));
+unsigned long long BIP_CAPACITY = 1 * CAPACITY;
+unsigned long long LRU_CAPACITY = 0 * CAPACITY / ((PAGE + 1)/(SUBPAGE + 1));
+// unsigned long long BIP_CAPACITY = 0.7 * CAPACITY;
+// unsigned long long LRU_CAPACITY = 0.3 * CAPACITY / ((PAGE + 1)/(SUBPAGE + 1));
 unsigned long long ACTIVE = (BIP_CAPACITY * 9 / 10);
 unsigned long long INACTIVE = ((BIP_CAPACITY + 9) / 10);
 unsigned long long CANDIDATE = BIP_CAPACITY ;
@@ -670,6 +670,7 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 
 	if (flag == 0 || flag == 3)
 		page_fault++;
+	return flag;
 
 	// 判断是否能够合并成一个Page
 	int set = (PAGE + 1) / (SUBPAGE + 1);
@@ -687,7 +688,6 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 		}
 	}
 	if (isPage >= PROMOTE_THRESHOLD)
-	//if (isPage >= 128)
 	{
 		// 合并成Page插入到LRU 队列
 		Page lru_pg = (Page)malloc(sizeof(pageNode));
