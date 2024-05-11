@@ -43,7 +43,7 @@ pid_redis=0
     mkdir ../../../src/Pagerank
     mv pinatrace.out ../../../src/Pagerank/pagerank.out
 
-    #Generate memory access sequence of metis
+    #Generate memory access sequence of linear_regression
     cd ../metis
     ../../pintool/pin -t ../../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so -- ./Metis/obj/linear_regression ./Metis/data/lr_40GB.txt -p 8
     # ../../pintool/pin -t ../../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so -- ./Metis/obj/linear_regression ./Metis/data/lr_10MB.txt -p 8
@@ -54,7 +54,7 @@ pid_redis=0
     tmux new-session -d -s session1 
     tmux new-session -d -s session2
 
-    #Generate memory access sequence of YCSB-A and YCSB-B
+    #Generate memory access sequence of YCSB-A
     tmux send-keys -t session1 'cd YCSB/' C-m
     tmux send-keys -t session2 'cd YCSB/' C-m
     tmux send-keys -t session1 '../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf' C-m
@@ -85,6 +85,7 @@ pid_redis=0
         fi
     done
 
+    #Generate memory access sequence of YCSB-B
     tmux send-keys -t session1 '../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf' C-m
     sleep 2s
     pid_redis=$(pidof redis-server)
@@ -117,7 +118,7 @@ pid_redis=0
     tmux send-keys -t session2 'cd ../' C-m
     
 
-    #Generate memory access sequence of Memcached
+    #Generate memory access sequence of Facebook-ETC
     tmux send-keys -t session1 'memcached -m 20480 -u root' C-m
     sleep 2s
     pid_redis=$(pidof memcached)
