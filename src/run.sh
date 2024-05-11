@@ -311,7 +311,7 @@ UniMem_AMAT(){
 DA(){
     local count_file=$1
     last_line=$(tail -n 1 "$count_file")
-    memory_size=$(echo "$last_line" | sed -n 's/#memory_size:\(.*\)B/\1/p')
+    memory_size=$(echo "$last_line" | sed -n 's/#memory_size:\(.*\)KB/\1/p')
     local out_file=$2
     if [[ $out_file == *Kona* ]]; then
         local page_fault=$(($(wc -l < $out_file) - 2))
@@ -324,7 +324,7 @@ DA(){
         local page_fault=$(echo "$pf_line" | sed -n 's/^#page_fault:\(.*\)/\1/p')
     fi
     local page_size=$3
-    local DA=$(echo "scale=2; $page_size * $page_fault / $memory_size" | bc)
+    local DA=$(echo "scale=2; $page_size * $page_fault / $memory_size / 1024" | bc)
     echo "$DA"
 }
     
