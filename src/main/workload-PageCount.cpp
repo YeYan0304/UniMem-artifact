@@ -35,7 +35,7 @@ void listInsert(List list, Page pg)
 	list->head = pg;
 	list->size += 1;
 }
-// 删除 active队尾页面  并输出
+
 void listDeleteTail(List list)
 {
 	Page tmp_pg = list->tail;
@@ -91,8 +91,8 @@ int main(int argc, char* argv[])
 	double line = 0;
 	int tmp_line = 0;
 	while (1) {
-		unsigned long long tmp_num = 0, tmp_page = 0; // 地址，组号，页面号
-		unsigned tmp_size = 0; 			 // 数据量，页内偏移量 
+		unsigned long long tmp_num = 0, tmp_page = 0; 
+		unsigned tmp_size = 0; 			 
 		char c = ' ';
 
 		if (fscanf(trace, "%c %llx %u\n", &c, &tmp_num, &tmp_size) == EOF) {
@@ -102,14 +102,10 @@ int main(int argc, char* argv[])
 			break;
 
 		tmp_page = tmp_num / (SUBPAGE + 0x1);
-		//插入
 		if (searchList(countlist, tmp_page)==0) {
 			count++;
 		}
 		tmp_line++;
-		//if (tmp_line % 1000000 == 0) {
-		//	printf("line=%lf,count=%lf\n", line + tmp_line, count);
-		//}
 		if (tmp_line == 2000000000)
 			line += tmp_line;
 

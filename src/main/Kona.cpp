@@ -3,7 +3,7 @@
 
 #define CAPACITY 4
 #define SUBPAGE 0xfff
-#define INDEX 97
+#define INDEX 86
 
 unsigned long long access = 0;
 unsigned long long write_back = 0;
@@ -30,9 +30,7 @@ void insert(Page p, unsigned offset, unsigned size)
 {
 	Addr tmp = p->first, left = p->first;
 
-	// 比第一个结点还小 
 	if (offset + size < tmp->head) {
-		//		printf("比第一个结点还小\n");
 		Addr ad = (Addr)malloc(sizeof(addr));
 		ad->head = offset;
 		ad->tail = offset + size - 1;
@@ -47,9 +45,7 @@ void insert(Page p, unsigned offset, unsigned size)
 		tmp = tmp->next;
 	}
 
-	// 1.在这之后开辟 
 	if (tmp == NULL) {
-		//		printf("1.在这之后开辟\n");
 		Addr ad = (Addr)malloc(sizeof(addr));
 		ad->head = offset;
 		ad->tail = offset + size - 1;
@@ -57,9 +53,7 @@ void insert(Page p, unsigned offset, unsigned size)
 		left->next = ad;
 		return;
 	}
-	// 2.在这之前开辟 	
 	else if (offset + size < tmp->head) {
-		//		printf("2.在这之前开辟\n");
 		Addr ad = (Addr)malloc(sizeof(addr));
 		ad->head = offset;
 		ad->tail = offset + size - 1;
@@ -67,9 +61,7 @@ void insert(Page p, unsigned offset, unsigned size)
 		left->next = ad;
 		return;
 	}
-	// 3.合并分区 
 	else {
-		//		printf("3.合并分区\n");
 		tmp->head = tmp->head < offset ? tmp->head : offset;
 		tmp->tail = tmp->tail > (offset + size - 1) ? tmp->tail : (offset + size - 1);
 		while (tmp->next && tmp->tail >= tmp->next->head) {
@@ -92,14 +84,12 @@ void PrintSize(Page p, FILE* fp)
 		ad = ad->next;
 		free(tmp);
 	}
-	//printf("出队并输出   %llx %u\n", p->page_num, size);
 	fprintf(fp, "%llx %u\n", p->page_num, size);
 	if(p->dirty){
 		write_back++;
 	}
 }
 
-// 将页面 pg 插入 list队首 
 void listInsert(FIFOList fifo, Page pg)
 {
 	if (fifo->list_size == 0) {
@@ -117,7 +107,7 @@ void listInsert(FIFOList fifo, Page pg)
 	fifo->list_head = pg;
 	fifo->list_size += 1;
 }
-// 删除 list队尾页面  并输出 
+
 void listDelete(FIFOList fifo, FILE* fp)
 {
 	Page tmp_pg = fifo->list_tail;
@@ -160,7 +150,6 @@ void createPage(FIFOList fifo, unsigned long long tmp_page_num, unsigned offset,
 	}
 	else {
 		Page tmp_pg = NULL;
-		// list非空 则在 list 队中查找 
 		if (fifo->list_size > 0) {
 			tmp_pg = fifo->list_head;
 			for (unsigned i = fifo->list_size; i > 0; i--) {
@@ -173,7 +162,6 @@ void createPage(FIFOList fifo, unsigned long long tmp_page_num, unsigned offset,
 				tmp_pg = tmp_pg->rlink;
 			}
 		}
-		// 没有该页面 
 		if (flag == 0) {
 			Page pg = (Page)malloc(sizeof(pageNode));
 			pg->llink = NULL;
@@ -196,7 +184,6 @@ void createPage(FIFOList fifo, unsigned long long tmp_page_num, unsigned offset,
 			}
 		}
 		if (flag == 1) {
-			// 合并页面中访问的片段 
 			insert(tmp_pg, offset, tmp_size);
 		}
 	}
@@ -224,8 +211,8 @@ int main(int argc, char* argv[])
 	char c = ' ';
 	int dirty = 0;
 	while (1) {
-		unsigned long long tmp_num = 0, tmp_group = 0, tmp_page = 0; // 地址，组号，页面号
-		unsigned tmp_size = 0, offset = 0; 			 // 数据量，页内偏移量 
+		unsigned long long tmp_num = 0, tmp_group = 0, tmp_page = 0; 
+		unsigned tmp_size = 0, offset = 0; 			 
 		dirty = 0;
 
 		if (fscanf(trace, "%c %llx %u\n", &c, &tmp_num, &tmp_size) == EOF) {
@@ -239,10 +226,7 @@ int main(int argc, char* argv[])
 		tmp_group = (tmp_num / (SUBPAGE + 0x1)) % INDEX;
 		offset = tmp_num & SUBPAGE;
 
-		// printf("%lf\n", ++line);
 		++line;
-		// if((int)line > 1450000000)
-		//	break;
 
 		if (offset + tmp_size - 1 <= SUBPAGE) {
 			createPage(cache[tmp_group], tmp_page, offset, tmp_size, fp, dirty);
@@ -251,7 +235,6 @@ int main(int argc, char* argv[])
 				pre_page = tmp_page;
 			}
 		}
-		// 偏移量 + 数据量 - 1 > SUBPAGE   :超出当前页 
 		else {
 			createPage(cache[tmp_group], tmp_page, offset, SUBPAGE - offset + 1, fp, dirty);
 			if (tmp_page != pre_page) {
@@ -285,11 +268,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-
-	// 输出缓存中的剩余页面
 	for (int i = 0; i < INDEX + 1; i++) {
-		//printf("输出第%d组：\n", i);
-		// 输出list中剩余页面 
 		while (cache[i]->list_size) {
 			listDelete(cache[i], fp);
 		}

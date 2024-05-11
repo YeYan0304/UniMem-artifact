@@ -4,7 +4,7 @@
 #include <map>
 #include <bitset>
 
-#define CAPACITY 692
+#define CAPACITY 357
 #define BIP_CAPACITY CAPACITY * 8 * 0.2
 #define LRU_CAPACITY CAPACITY * 0.8
 #define ACTIVE (BIP_CAPACITY * 9 / 10)
@@ -71,7 +71,6 @@ void PrintSize(Page p, FILE* fp, unsigned page_size)
 	for (int i = 0; i < PAGE + 1; i++) {
 		size += p->addr[i];
 	}
-	//printf("出队并输出   %llx %u\n", p->page_num, size);
 	page_used += size;
 	page_sum += page_size;
 
@@ -86,7 +85,6 @@ void PrintSize(Page p, FILE* fp, unsigned page_size)
 
 }
 
-// 将页面pg 插入 active队首 
 void activeBIPInsert(BIPList list, Page pg)
 {
 	if (list->active_size == 0)
@@ -105,7 +103,7 @@ void activeBIPInsert(BIPList list, Page pg)
 	list->active_head = pg;
 	list->active_size += 1;
 }
-// 删除 active队尾页面  并输出
+
 void activeBIPDeleteTail(BIPList list, FILE* fp)
 {
 	Page tmp_pg = list->active_tail;
@@ -122,7 +120,7 @@ void activeBIPDeleteTail(BIPList list, FILE* fp)
 	PrintSize(tmp_pg, fp, SUBPAGE + 1);
 	free(tmp_pg);
 }
-// 将空页面pg 插入 candidate队首 
+
 void candidateInsert(BIPList list, Page pg)
 {
 	if (list->candidate_size == 0)
@@ -141,7 +139,7 @@ void candidateInsert(BIPList list, Page pg)
 	list->candidate_head = pg;
 	list->candidate_size += 1;
 }
-// 删除 candidate队尾页面  
+
 void candidateDeleteTail(BIPList list)
 {
 	Page tmp_pg = list->candidate_tail;
@@ -157,7 +155,7 @@ void candidateDeleteTail(BIPList list)
 
 	free(tmp_pg);
 }
-// 将页面 pg 插入 inactive队首 
+
 void inactiveBIPInsert(BIPList list, Page pg)
 {
 	if (list->inactive_size == 0) {
@@ -175,7 +173,7 @@ void inactiveBIPInsert(BIPList list, Page pg)
 	list->inactive_head = pg;
 	list->inactive_size += 1;
 }
-// 删除 inactive队尾页面  并输出 
+
 void inactiveBIPDeleteTail(BIPList list, FILE* fp)
 {
 	Page tmp_pg = list->inactive_tail;
@@ -193,7 +191,7 @@ void inactiveBIPDeleteTail(BIPList list, FILE* fp)
 	PrintSize(tmp_pg, fp, SUBPAGE + 1);
 	free(tmp_pg);
 }
-// 删除 inactive队首页面  并输出 
+
 void inactiveBIPDeleteHead(BIPList list, FILE* fp)
 {
 	Page tmp_pg = list->inactive_head;
@@ -212,7 +210,6 @@ void inactiveBIPDeleteHead(BIPList list, FILE* fp)
 	free(tmp_pg);
 }
 
-// 将页面 pg 插入 inactive队首 
 void inactiveLRUInsert(LRUList list, Page pg)
 {
 	if (list->inactive_size == 0) {
@@ -230,7 +227,7 @@ void inactiveLRUInsert(LRUList list, Page pg)
 	list->inactive_head = pg;
 	list->inactive_size += 1;
 }
-// 删除 inactive队尾页面
+
 void inactiveLRUDeleteTail(LRUList list, FILE* fp)
 {
 	Page tmp_pg = list->inactive_tail;
@@ -248,7 +245,7 @@ void inactiveLRUDeleteTail(LRUList list, FILE* fp)
 	PrintSize(tmp_pg, fp, PAGE + 1);
 	free(tmp_pg);
 }
-// 将页面pg 插入 active队首 
+
 void activeLRUInsert(LRUList list, Page pg)
 {
 	if (list->active_size == 0)
@@ -267,7 +264,7 @@ void activeLRUInsert(LRUList list, Page pg)
 	list->active_head = pg;
 	list->active_size += 1;
 }
-// 删除 active队尾页面
+
 void activeLRUDeleteTail(LRUList list, FILE* fp)
 {
 	Page tmp_pg = list->active_tail;
@@ -285,10 +282,8 @@ void activeLRUDeleteTail(LRUList list, FILE* fp)
 	free(tmp_pg);
 }
 
-// 查找队列
 int searchList(BIPList list, unsigned long long tmp_page_num, Page& p)
 {
-	// active非空  则在acive中查找 
 	if (list->active_size != 0) {
 		auto it = bip_active_map.find(tmp_page_num);
 		if (it != bip_active_map.end())
@@ -298,7 +293,6 @@ int searchList(BIPList list, unsigned long long tmp_page_num, Page& p)
 				return 2;
 		}
 	}
-	// active 队中没有且inactive非空 则在 inactive 队中查找 
 	if (list->inactive_size != 0) {
 		auto it = bip_inactive_map.find(tmp_page_num);
 		if (it != bip_inactive_map.end())
@@ -308,7 +302,6 @@ int searchList(BIPList list, unsigned long long tmp_page_num, Page& p)
 				return 1;
 		}
 	}
-	// inactive 队中没有且candidate非空 则在 candidate 队中查找 
 	if (list->candidate_size != 0) {
 		auto it = bip_candidate_map.find(tmp_page_num);
 		if (it != bip_candidate_map.end())
@@ -321,7 +314,6 @@ int searchList(BIPList list, unsigned long long tmp_page_num, Page& p)
 	return 0;
 }
 
-// 查找LRU
 int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp, int is_write)
 {
 	int flag = 0;
@@ -329,7 +321,6 @@ int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp
 
 	unsigned long long tmp_page_num = tmp_num / (PAGE + 0x1);
 	unsigned offset = tmp_num & PAGE;
-	// active非空  则在acive中查找 
 	if (lru->active_size != 0) {
 		auto it = lru_active_map.find(tmp_page_num);
 		if (it != lru_active_map.end())
@@ -339,7 +330,6 @@ int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp
 				flag = 2;
 		}
 	}
-	// active 队中没有且inactive非空 则在 inactive 队中查找 
 	if (lru->inactive_size != 0) {
 		auto it = lru_inactive_map.find(tmp_page_num);
 		if (it != lru_inactive_map.end())
@@ -349,22 +339,18 @@ int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp
 				flag = 1;
 		}
 	}
-	// 在inactive中，则将页面提升到active队列中
 	if (flag == 1) {
 		if(is_write)
 			tmp_pg->dirty = 1;
-		// 合并页面中访问的片段 
 		insert(tmp_pg, offset, tmp_size);
 
 		lru_inactive_map.erase(tmp_pg->page_num);
 		if (tmp_pg->llink == NULL) {
-			// 该页面为 inactive中第一个且为最后一个 
 			if (tmp_pg->rlink == NULL) {
 				lru->inactive_head = NULL;
 				lru->inactive_tail = NULL;
 				lru->inactive_size -= 1;
 			}
-			// 该页面为 inactive中第一个
 			else {
 				lru->inactive_head = tmp_pg->rlink;
 				tmp_pg->rlink->llink = tmp_pg->llink;
@@ -372,13 +358,11 @@ int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp
 			}
 		}
 		else {
-			// 该页面为 inactive中最后一个
 			if (tmp_pg->rlink == NULL) {
 				lru->inactive_tail = tmp_pg->llink;
 				tmp_pg->llink->rlink = tmp_pg->rlink;
 				lru->inactive_size -= 1;
 			}
-			// 非第一个 且 非最后一个 
 			else {
 				tmp_pg->llink->rlink = tmp_pg->rlink;
 				tmp_pg->rlink->llink = tmp_pg->llink;
@@ -390,9 +374,7 @@ int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp
 			activeLRUInsert(lru, tmp_pg);
 		}
 		else {
-			// 获取active队列尾的页面
 			Page lru_pg = lru->active_tail;
-			// 删除active队列尾的页面
 			lru_active_map.erase(lru->active_tail->page_num);
 			if (lru_pg->llink) {
 				lru_pg->llink->rlink = NULL;
@@ -403,32 +385,26 @@ int findLRU(LRUList lru, unsigned long long tmp_num, unsigned tmp_size, FILE* fp
 				lru->active_tail = NULL;
 			}
 			lru->active_size -= 1;
-			// 将删除的页面插入到inactive队列
 			lru_inactive_map.insert({ lru_pg->page_num, lru_pg });
 			inactiveLRUInsert(lru, lru_pg);
-			// 将提升的页面插入到active队列
 			lru_active_map.insert({ tmp_pg->page_num,tmp_pg });
 			activeLRUInsert(lru, tmp_pg);
 		}
 	}
-	// 该页面在 active队中 
 	if (flag == 2) {
 		if(is_write)
 			tmp_pg->dirty = 1;
-		// 合并页面中访问的片段 
+
 		insert(tmp_pg, offset, tmp_size);
-		// 已经是队首 
 		if (tmp_pg->llink == NULL) {
 			;
 		}
-		// 位于 active队尾 
 		else if (tmp_pg->rlink == NULL) {
 			lru->active_tail = tmp_pg->llink;
 			tmp_pg->llink->rlink = NULL;
 			lru->active_size -= 1;
 			activeLRUInsert(lru, tmp_pg);
 		}
-		// 位于 active队中间 
 		else {
 			tmp_pg->llink->rlink = tmp_pg->rlink;
 			tmp_pg->rlink->llink = tmp_pg->llink;
@@ -446,9 +422,7 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 	int flag = 0;
 
 	Page tmp_pg = NULL;
-	// 查找该页面 
 	flag = searchList(list, tmp_page_num, tmp_pg);
-	// 没有该页面 
 	if (flag == 0) {
 		Page pg = (Page)malloc(sizeof(pageNode));
 		pg->llink = NULL;
@@ -457,7 +431,7 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 		pg->addr = 0;
 		if(is_write)
 			pg->dirty = 1;
-		// 插入地址片段
+
 		insert(pg, offset, tmp_size);
 
 		if (list->inactive_size < INACTIVE) {
@@ -465,13 +439,10 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			inactiveBIPInsert(list, pg);
 		}
 		else {
-			// 获取candidate页面号
 			unsigned long long candidate_num = 0;
-			// inactivelist使用FIFO替换策略
 			candidate_num = list->inactive_tail->page_num;
 			bip_inactive_map.erase(candidate_num);
 			inactiveBIPDeleteTail(list, fp);
-			// 将candidate页面插入candidate列
 			Page candidate_pg = (Page)malloc(sizeof(pageNode));
 			candidate_pg->llink = NULL;
 			candidate_pg->rlink = NULL;
@@ -495,22 +466,18 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			inactiveBIPInsert(list, pg);
 		}
 	}
-	// 该页面在 inactive队中  将页面提升到 active队 
 	if (flag == 1) {
 		if(is_write)
 			tmp_pg->dirty = 1;
 		
-		// 合并页面中访问的片段 
 		insert(tmp_pg, offset, tmp_size);
 		bip_inactive_map.erase(tmp_pg->page_num);
 		if (tmp_pg->llink == NULL) {
-			// 该页面为 inactive中第一个且为最后一个 
 			if (tmp_pg->rlink == NULL) {
 				list->inactive_head = NULL;
 				list->inactive_tail = NULL;
 				list->inactive_size -= 1;
 			}
-			// 该页面为 inactive中第一个
 			else {
 				list->inactive_head = tmp_pg->rlink;
 				tmp_pg->rlink->llink = tmp_pg->llink;
@@ -518,13 +485,11 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			}
 		}
 		else {
-			// 该页面为 inactive中最后一个
 			if (tmp_pg->rlink == NULL) {
 				list->inactive_tail = tmp_pg->llink;
 				tmp_pg->llink->rlink = tmp_pg->rlink;
 				list->inactive_size -= 1;
 			}
-			// 非第一个 且 非最后一个 
 			else {
 				tmp_pg->llink->rlink = tmp_pg->rlink;
 				tmp_pg->rlink->llink = tmp_pg->llink;
@@ -535,15 +500,11 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			bip_active_map.insert({ tmp_pg->page_num, tmp_pg });
 			activeBIPInsert(list, tmp_pg);
 		}
-		// active_size == CAPACITY * 9 / 10   active队中页面满   
 		else {
-			// 获取candidate页面号
 			unsigned long long candidate_num = 0;
-			// activelist使用LRU替换策略
 			candidate_num = list->active_tail->page_num;
 			bip_active_map.erase(candidate_num);
 			activeBIPDeleteTail(list, fp);
-			// 将candidate页面插入candidate列
 			Page candidate_pg = (Page)malloc(sizeof(pageNode));
 			candidate_pg->llink = NULL;
 			candidate_pg->rlink = NULL;
@@ -567,24 +528,20 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			activeBIPInsert(list, tmp_pg);
 		}
 	}
-	// 该页面在 active队中 
 	if (flag == 2) {
 		if(is_write)
 			tmp_pg->dirty = 1;
-		// 合并页面中访问的片段 
+
 		insert(tmp_pg, offset, tmp_size);
-		// 已经是队首 
 		if (tmp_pg->llink == NULL) {
 			;
 		}
-		// 位于 active队尾 
 		else if (tmp_pg->rlink == NULL) {
 			list->active_tail = tmp_pg->llink;
 			tmp_pg->llink->rlink = NULL;
 			list->active_size -= 1;
 			activeBIPInsert(list, tmp_pg);
 		}
-		// 位于 active队中间 
 		else {
 			tmp_pg->llink->rlink = tmp_pg->rlink;
 			tmp_pg->rlink->llink = tmp_pg->llink;
@@ -592,23 +549,19 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			activeBIPInsert(list, tmp_pg);
 		}
 	}
-	// 该页面在 candidate队中   将页面提升到 active队
 	if (flag == 3) {
 		if(is_write)
 			tmp_pg->dirty = 1;
 
-		// 插入地址片段
 		insert(tmp_pg, offset, tmp_size);
 
 		bip_candidate_map.erase(tmp_pg->page_num);
 		if (tmp_pg->llink == NULL) {
-			// 该页面为 candidate中第一个且为最后一个 
 			if (tmp_pg->rlink == NULL) {
 				list->candidate_head = NULL;
 				list->candidate_tail = NULL;
 				list->candidate_size -= 1;
 			}
-			// 该页面为 candidate中第一个
 			else {
 				list->candidate_head = tmp_pg->rlink;
 				tmp_pg->rlink->llink = tmp_pg->llink;
@@ -616,13 +569,11 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			}
 		}
 		else {
-			// 该页面为 candidate中最后一个
 			if (tmp_pg->rlink == NULL) {
 				list->candidate_tail = tmp_pg->llink;
 				tmp_pg->llink->rlink = tmp_pg->rlink;
 				list->candidate_size -= 1;
 			}
-			// 非第一个 且 非最后一个 
 			else {
 				tmp_pg->llink->rlink = tmp_pg->rlink;
 				tmp_pg->rlink->llink = tmp_pg->llink;
@@ -633,15 +584,11 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			bip_active_map.insert({ tmp_pg->page_num, tmp_pg });
 			activeBIPInsert(list, tmp_pg);
 		}
-		// active队中页面满   
 		else {
-			// 获取candidate页面号
 			unsigned long long candidate_num = 0;
-			// activelist使用LRU替换策略
 			candidate_num = list->active_tail->page_num;
 			bip_active_map.erase(candidate_num);
 			activeBIPDeleteTail(list, fp);
-			// 将candidate页面插入candidate列
 			Page candidate_pg = (Page)malloc(sizeof(pageNode));
 			candidate_pg->llink = NULL;
 			candidate_pg->rlink = NULL;
@@ -669,7 +616,6 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 	if (flag == 0 || flag == 3)
 		page_fault++;
 
-	// 判断是否能够合并成一个Page
 	int set = (PAGE + 1) / (SUBPAGE + 1);
 	int* sign = (int*)malloc(sizeof(int) * set);
 	Page* pg = (Page*)malloc((sizeof(Page) * set));
@@ -686,7 +632,6 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 	}
 	if (isPage >= PROMOTE_THRESHOLD)
 	{
-		// 合并成Page插入到LRU 队列
 		Page lru_pg = (Page)malloc(sizeof(pageNode));
 		lru_pg->llink = NULL;
 		lru_pg->rlink = NULL;
@@ -695,20 +640,16 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 		if(dirty > 0)
 			lru_pg->dirty = 1;
 
-		// 删除BIP list中的页面，在LRU list中加入页面
 		for (int i = 0; i < set; i++)
 		{
-			// 在active队列中
 			if (sign[i] == 2) {
 				bip_active_map.erase(pg[i]->page_num);
 				if (pg[i]->llink == NULL) {
-					// 该页面为 active中第一个且为最后一个 
 					if (pg[i]->rlink == NULL) {
 						list->active_head = NULL;
 						list->active_tail = NULL;
 						list->active_size -= 1;
 					}
-					// 该页面为 active中第一个
 					else {
 						list->active_head = pg[i]->rlink;
 						pg[i]->rlink->llink = pg[i]->llink;
@@ -716,13 +657,11 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 					}
 				}
 				else {
-					// 该页面为 active中最后一个
 					if (pg[i]->rlink == NULL) {
 						list->active_tail = pg[i]->llink;
 						pg[i]->llink->rlink = pg[i]->rlink;
 						list->active_size -= 1;
 					}
-					// 非第一个 且 非最后一个 
 					else {
 						pg[i]->llink->rlink = pg[i]->rlink;
 						pg[i]->rlink->llink = pg[i]->llink;
@@ -730,17 +669,14 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 					}
 				}
 			}
-			// 在inactive队列中
 			else if (sign[i] == 1) {
 				bip_inactive_map.erase(pg[i]->page_num);
 				if (pg[i]->llink == NULL) {
-					// 该页面为 inactive中第一个且为最后一个 
 					if (pg[i]->rlink == NULL) {
 						list->inactive_head = NULL;
 						list->inactive_tail = NULL;
 						list->inactive_size -= 1;
 					}
-					// 该页面为 inactive中第一个
 					else {
 						list->inactive_head = pg[i]->rlink;
 						pg[i]->rlink->llink = pg[i]->llink;
@@ -748,13 +684,11 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 					}
 				}
 				else {
-					// 该页面为 inactive中最后一个
 					if (pg[i]->rlink == NULL) {
 						list->inactive_tail = pg[i]->llink;
 						pg[i]->llink->rlink = pg[i]->rlink;
 						list->inactive_size -= 1;
 					}
-					// 非第一个 且 非最后一个 
 					else {
 						pg[i]->llink->rlink = pg[i]->rlink;
 						pg[i]->rlink->llink = pg[i]->llink;
@@ -765,7 +699,6 @@ int createPage(BIPList list, LRUList lru, unsigned long long tmp_page_num, unsig
 			lru_pg->addr = lru_pg->addr | (pg[i]->addr << (SUBPAGE + 1) * i);
 			free(pg[i]);
 		}
-		// 合并的页面一定不在LRU 队列上
 		if (lru->inactive_size < (LRU_CAPACITY + 1) / 2) {
 			lru_inactive_map.insert({ lru_pg->page_num,lru_pg });
 			inactiveLRUInsert(lru, lru_pg);
@@ -813,8 +746,8 @@ int main(int argc, char* argv[])
 	int flag = 0;
 	int dirty = 0;
 	while (1) {
-		unsigned long long tmp_num = 0, tmp_group = 0, tmp_page = 0; // 地址，组号，页面号
-		unsigned tmp_size = 0, offset = 0; 			 // 数据量，页内偏移量 
+		unsigned long long tmp_num = 0, tmp_group = 0, tmp_page = 0; 
+		unsigned tmp_size = 0, offset = 0; 			 
 		dirty = 0;
 
 		if (fscanf(trace, "%c %llx %u\n", &c, &tmp_num, &tmp_size) == EOF) {
@@ -823,18 +756,14 @@ int main(int argc, char* argv[])
 
 		if(c == 'W'){
 			dirty = 1;
-			//printf("#\n");
 		}
 
 		tmp_page = tmp_num / (SUBPAGE + 0x1);
 		tmp_group = (tmp_num / (SUBPAGE + 0x1)) & INDEX;
 		offset = tmp_num & SUBPAGE;
 
-		//if ((int)line == 256)
-		//	printf("%lf\n", line);
 		++line;
 
-		// 查找LRU队列
 		if (findLRU(lru, tmp_num, tmp_size, fp, dirty) != 0)
 		{
 			lru_hit++;
@@ -853,7 +782,6 @@ int main(int argc, char* argv[])
 				candidate_hit++;
 			}
 		}
-		// 偏移量 + 数据量 - 1 > SUBPAGE   :超出当前页 
 		else {
 			flag = createPage(cache[tmp_group], lru, tmp_page, offset, SUBPAGE - offset + 1, fp, dirty);
 			if (flag == 2) {
@@ -902,18 +830,13 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	// 输出缓存中的剩余页面
 	for (int i = 0; i < INDEX + 1; i++) {
-		//printf("输出第%d组：\n", i);
-		// 输出inactive中剩余页面 
 		while (cache[i]->inactive_size) {
 			inactiveBIPDeleteTail(cache[i], fp);
 		}
-		// 输出active中剩余页面 
 		while (cache[i]->active_size) {
 			activeBIPDeleteTail(cache[i], fp);
 		}
-		// 释放candidate中的内存空间
 		while (cache[i]->candidate_size) {
 			candidateDeleteTail(cache[i]);
 		}

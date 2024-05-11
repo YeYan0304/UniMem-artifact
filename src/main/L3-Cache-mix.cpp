@@ -26,7 +26,6 @@ typedef struct l3_cache {
 	FIFOList* L3_cache;
 }*L3_Cache;
 
-// 将页面 pg 插入 list队首 
 void listInsert(FIFOList fifo, Page pg)
 {
 	if (fifo->list_size == 0) {
@@ -44,7 +43,7 @@ void listInsert(FIFOList fifo, Page pg)
 	fifo->list_head = pg;
 	fifo->list_size += 1;
 }
-// 删除 list队尾页面
+
 unsigned long long listDeleteTail(FIFOList fifo)
 {
 	Page tmp_pg = fifo->list_tail;
@@ -62,7 +61,7 @@ unsigned long long listDeleteTail(FIFOList fifo)
 	free(tmp_pg);
 	return tmp_page_num;
 }
-// 删除L1中指定页面
+
 void L1DeletePage(FIFOList* L1_cache, unsigned long long tmp_page_num)
 {
 	int L1_group = tmp_page_num % L1_SET;
@@ -70,15 +69,12 @@ void L1DeletePage(FIFOList* L1_cache, unsigned long long tmp_page_num)
 		Page tmp_pg = L1_cache[L1_group]->list_head;
 		for (unsigned i = L1_cache[L1_group]->list_size; i > 0; i--) {
 			if (tmp_pg->page_num == tmp_page_num) {
-				// 删除该页面
 				if (tmp_pg->llink == NULL) {
-					// 该页面为 list中第一个且为最后一个 
 					if (tmp_pg->rlink == NULL) {
 						L1_cache[L1_group]->list_head = NULL;
 						L1_cache[L1_group]->list_tail = NULL;
 						L1_cache[L1_group]->list_size -= 1;
 					}
-					// 该页面为 list中第一个
 					else {
 						L1_cache[L1_group]->list_head = tmp_pg->rlink;
 						tmp_pg->rlink->llink = tmp_pg->llink;
@@ -86,13 +82,11 @@ void L1DeletePage(FIFOList* L1_cache, unsigned long long tmp_page_num)
 					}
 				}
 				else {
-					// 该页面为 list中最后一个
 					if (tmp_pg->rlink == NULL) {
 						L1_cache[L1_group]->list_tail = tmp_pg->llink;
 						tmp_pg->llink->rlink = tmp_pg->rlink;
 						L1_cache[L1_group]->list_size -= 1;
 					}
-					// 非第一个 且 非最后一个 
 					else {
 						tmp_pg->llink->rlink = tmp_pg->rlink;
 						tmp_pg->rlink->llink = tmp_pg->llink;
@@ -105,7 +99,7 @@ void L1DeletePage(FIFOList* L1_cache, unsigned long long tmp_page_num)
 		}
 	}
 }
-// 删除L2中指定页面
+
 void L2DeletePage(FIFOList* L2_cache, unsigned long long tmp_page_num)
 {
 	int L2_group = tmp_page_num % L2_SET;
@@ -113,15 +107,12 @@ void L2DeletePage(FIFOList* L2_cache, unsigned long long tmp_page_num)
 		Page tmp_pg = L2_cache[L2_group]->list_head;
 		for (unsigned i = L2_cache[L2_group]->list_size; i > 0; i--) {
 			if (tmp_pg->page_num == tmp_page_num) {
-				// 删除该页面
 				if (tmp_pg->llink == NULL) {
-					// 该页面为 list中第一个且为最后一个 
 					if (tmp_pg->rlink == NULL) {
 						L2_cache[L2_group]->list_head = NULL;
 						L2_cache[L2_group]->list_tail = NULL;
 						L2_cache[L2_group]->list_size -= 1;
 					}
-					// 该页面为 list中第一个
 					else {
 						L2_cache[L2_group]->list_head = tmp_pg->rlink;
 						tmp_pg->rlink->llink = tmp_pg->llink;
@@ -129,13 +120,11 @@ void L2DeletePage(FIFOList* L2_cache, unsigned long long tmp_page_num)
 					}
 				}
 				else {
-					// 该页面为 list中最后一个
 					if (tmp_pg->rlink == NULL) {
 						L2_cache[L2_group]->list_tail = tmp_pg->llink;
 						tmp_pg->llink->rlink = tmp_pg->rlink;
 						L2_cache[L2_group]->list_size -= 1;
 					}
-					// 非第一个 且 非最后一个 
 					else {
 						tmp_pg->llink->rlink = tmp_pg->rlink;
 						tmp_pg->rlink->llink = tmp_pg->llink;
@@ -158,7 +147,7 @@ int readCache(L3_Cache cache, unsigned long long tmp_page_num)
 	int L3_group = tmp_page_num % L3_SET;
 
 	Page tmp_pg = NULL;
-	// 查找 cache
+
 	if (cache->L1_cache[L1_group]->list_size > 0) {
 		tmp_pg = cache->L1_cache[L1_group]->list_head;
 		for (unsigned i = cache->L1_cache[L1_group]->list_size; i > 0; i--) {
@@ -192,7 +181,6 @@ int readCache(L3_Cache cache, unsigned long long tmp_page_num)
 		}
 	}
 
-	// 没有该页面 
 	if (flag == 0) {
 		Page pg3 = (Page)malloc(sizeof(pageNode));
 		pg3->llink = NULL;
@@ -202,9 +190,7 @@ int readCache(L3_Cache cache, unsigned long long tmp_page_num)
 			listInsert(cache->L3_cache[L3_group], pg3);
 		}
 		else {
-			// 获取删除的页面
 			unsigned long long tmp_num = listDeleteTail(cache->L3_cache[L3_group]);
-			// 检查L2和L1中
 			L2DeletePage(cache->L2_cache, tmp_num);
 			L1DeletePage(cache->L1_cache, tmp_num);
 			listInsert(cache->L3_cache[L3_group], pg3);
@@ -218,9 +204,7 @@ int readCache(L3_Cache cache, unsigned long long tmp_page_num)
 			listInsert(cache->L2_cache[L2_group], pg2);
 		}
 		else {
-			// 获取删除的页面
 			unsigned long long tmp_num = listDeleteTail(cache->L2_cache[L2_group]);
-			// 检查L1中
 			L1DeletePage(cache->L1_cache, tmp_num);
 			listInsert(cache->L2_cache[L2_group], pg2);
 		}
@@ -262,9 +246,7 @@ int readCache(L3_Cache cache, unsigned long long tmp_page_num)
 			listInsert(cache->L2_cache[L2_group], pg2);
 		}
 		else {
-			// 获取删除的页面
 			unsigned long long tmp_num = listDeleteTail(cache->L2_cache[L2_group]);
-			// 检查L1中
 			L1DeletePage(cache->L1_cache, tmp_num);
 			listInsert(cache->L2_cache[L2_group], pg2);
 		}
@@ -321,8 +303,8 @@ int main(int argc, char* argv[])
 	int workload = 0;
 	int finished[WORKLOAD_NUM + 1] = { 0 };
 	while (1) {
-		unsigned long long tmp_num = 0, tmp_page = 0; // 地址，组号，页面号
-		unsigned tmp_size = 0, offset = 0; 			 // 数据量，页内偏移量 
+		unsigned long long tmp_num = 0, tmp_page = 0; 
+		unsigned tmp_size = 0, offset = 0; 			
 		char c = ' ';
 
 		do {
@@ -335,15 +317,10 @@ int main(int argc, char* argv[])
 				break;
 			}
 			finished[0] = 1;
-			/*for (int k = 1; k < WORKLOAD_NUM + 1; k++)
-			{
-				finished[0] &= finished[k];
-			}*/
 		} while (!finished[0]);
 		if (finished[0] == 1)
 			break;
-		// if ((int)line % 1000000 == 0)
-		//	printf("%lf\n", line);
+
 		++line;
 
 		if (tmp_num == pre_page)
@@ -360,7 +337,6 @@ int main(int argc, char* argv[])
 				pre_page = tmp_page;
 			}
 		}
-		// 偏移量 + 数据量 - 1 > SUBPAGE   :超出当前页 
 		else {
 			if (readCache(cache, tmp_page) == 0) {
 				fprintf(fp, "%c 0x%llx %u\n", c, tmp_num - offset, 64);
@@ -395,7 +371,6 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	// 输出缓存中的剩余页面
 	for (int i = 0; i < L1_SET; i++) {
 		while (cache->L1_cache[i]->list_size) {
 			listDeleteTail(cache->L1_cache[i]);
