@@ -104,7 +104,7 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     ../main/run-Unimem-LRU-proportion.sh memcache $memcache_512
     ../main/run-Unimem-nopromote.sh memcache $memcache_512
     ../main/run-Unimem-set.sh memcache $memcache_512
-    ../main/run-Unimem-subpage.sh memcache $memcache_128 $memcache_256 $memcache_1k $memcache_2k $memcache_4k
+    ../main/run-Unimem-subpage.sh memcache $memcache_128 $memcache_256 $memcache_512 $memcache_1k $memcache_2k $memcache_4k
     rm bip-* fifo-* lru-*
     cd ../
     echo "Facebook-ETC finished" 
@@ -130,7 +130,7 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     ../main/run-Unimem-LRU-proportion.sh redis $redis_512
     ../main/run-Unimem-nopromote.sh redis $redis_512
     ../main/run-Unimem-set.sh redis $redis_512
-    ../main/run-Unimem-subpage.sh redis $redis_128 $redis_256 $redis_1k $redis_2k $redis_4k
+    ../main/run-Unimem-subpage.sh redis $redis_128 $redis_256 $redis_512 $redis_1k $redis_2k $redis_4k
     rm bip-* fifo-* lru-*
     cd ../
     echo "Redis Rand finished"
@@ -156,7 +156,7 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     ../main/run-Unimem-LRU-proportion.sh pagerank $pagerank_512
     ../main/run-Unimem-nopromote.sh pagerank $pagerank_512
     ../main/run-Unimem-set.sh pagerank $pagerank_512
-    ../main/run-Unimem-subpage.sh pagerank $pagerank_128 $pagerank_256 $pagerank_1k $pagerank_2k $pagerank_4k
+    ../main/run-Unimem-subpage.sh pagerank $pagerank_128 $pagerank_256 $pagerank_512 $pagerank_1k $pagerank_2k $pagerank_4k
     rm bip-* fifo-* lru-*
     cd ../
     echo "Page Rank finished"
@@ -182,7 +182,7 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     ../main/run-Unimem-LRU-proportion.sh ycsb_a $ycsb_a_512
     ../main/run-Unimem-nopromote.sh ycsb_a $ycsb_a_512
     ../main/run-Unimem-set.sh ycsb_a $ycsb_a_512
-    ../main/run-Unimem-subpage.sh ycsb_a $ycsb_a_128 $ycsb_a_256 $ycsb_a_1k $ycsb_a_2k $ycsb_a_4k
+    ../main/run-Unimem-subpage.sh ycsb_a $ycsb_a_128 $ycsb_a_256 $ycsb_a_512 $ycsb_a_1k $ycsb_a_2k $ycsb_a_4k
     rm bip-* fifo-* lru-*
     cd ../
     echo "YCSB-A finished"
@@ -555,31 +555,31 @@ DA(){
     cd 4.5_Cache_Block_Size_Figure12
     echo "generating Average Memory Access Time results of Redis-Rand"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Redis-Rand-AMAT_Figure12_a
-    echo -e "AMAT\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-4k-10out)" >> Redis-Rand-AMAT_Figure12_a
+    echo -e "AMAT\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-4k-10out)" >> Redis-Rand-AMAT_Figure12_a
     echo "generating Data Amplification results of Redis-Rand"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Redis-Rand-DA_Figure12_a
-    echo -e "DA\t$(DA ../Redis/redis-count-128 ../Redis/redis-Unimem-subpage-128B-10out 128)\t$(DA ../Redis/redis-count-256 ../Redis/redis-Unimem-subpage-256B-10out 256)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-10out 512)\t$(DA ../Redis/redis-count-1k ../Redis/redis-Unimem-subpage-1k-10out 1024)\t$(DA ../Redis/redis-count-2k ../Redis/redis-Unimem-subpage-2k-10out 2048)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Unimem-subpage-4k-10out 4096)" >>  Redis-Rand-DA_Figure12_a
+    echo -e "DA\t$(DA ../Redis/redis-count-128 ../Redis/redis-Unimem-subpage-128B-10out 128)\t$(DA ../Redis/redis-count-256 ../Redis/redis-Unimem-subpage-256B-10out 256)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-subpage-512B-10out 512)\t$(DA ../Redis/redis-count-1k ../Redis/redis-Unimem-subpage-1k-10out 1024)\t$(DA ../Redis/redis-count-2k ../Redis/redis-Unimem-subpage-2k-10out 2048)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Unimem-subpage-4k-10out 4096)" >>  Redis-Rand-DA_Figure12_a
     
     echo "generating Average Memory Access Time results of Facebook-ETC"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Facebook-ETC-AMAT_Figure12_b
-    echo -e "AMAT\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-4k-10out)" >> Facebook-ETC-AMAT_Figure12_b
+    echo -e "AMAT\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-4k-10out)" >> Facebook-ETC-AMAT_Figure12_b
     echo "generating Data Amplification results of Facebook-ETC"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Facebook-ETC-DA_Figure12_b
-    echo -e "DA\t$(DA ../Memcache/memcache-count-128 ../Memcache/memcache-Unimem-subpage-128B-10out 128)\t$(DA ../Memcache/memcache-count-256 ../Memcache/memcache-Unimem-subpage-256B-10out 256)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-10out 512)\t$(DA ../Memcache/memcache-count-1k ../Memcache/memcache-Unimem-subpage-1k-10out 1024)\t$(DA ../Memcache/memcache-count-2k ../Memcache/memcache-Unimem-subpage-2k-10out 2048)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Unimem-subpage-4k-10out 4096)" >>  Facebook-ETC-DA_Figure12_b
+    echo -e "DA\t$(DA ../Memcache/memcache-count-128 ../Memcache/memcache-Unimem-subpage-128B-10out 128)\t$(DA ../Memcache/memcache-count-256 ../Memcache/memcache-Unimem-subpage-256B-10out 256)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-subpage-512B-10out 512)\t$(DA ../Memcache/memcache-count-1k ../Memcache/memcache-Unimem-subpage-1k-10out 1024)\t$(DA ../Memcache/memcache-count-2k ../Memcache/memcache-Unimem-subpage-2k-10out 2048)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Unimem-subpage-4k-10out 4096)" >>  Facebook-ETC-DA_Figure12_b
 
     echo "generating Average Memory Access Time results of Page-Rank"  
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Page-Rank-AMAT_Figure12_c
-    echo -e "AMAT\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-4k-10out)" >> Page-Rank-AMAT_Figure12_c
+    echo -e "AMAT\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-4k-10out)" >> Page-Rank-AMAT_Figure12_c
     echo "generating Data Amplification results of Page-Rank"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Page-Rank-DA_Figure12_c
-    echo -e "DA\t$(DA ../Pagerank/pagerank-count-128 ../Pagerank/pagerank-Unimem-subpage-128B-10out 128)\t$(DA ../Pagerank/pagerank-count-256 ../Pagerank/pagerank-Unimem-subpage-256B-10out 256)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-10out 512)\t$(DA ../Pagerank/pagerank-count-1k ../Pagerank/pagerank-Unimem-subpage-1k-10out 1024)\t$(DA ../Pagerank/pagerank-count-2k ../Pagerank/pagerank-Unimem-subpage-2k-10out 2048)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Unimem-subpage-4k-10out 4096)" >>  Page-Rank-DA_Figure12_c
+    echo -e "DA\t$(DA ../Pagerank/pagerank-count-128 ../Pagerank/pagerank-Unimem-subpage-128B-10out 128)\t$(DA ../Pagerank/pagerank-count-256 ../Pagerank/pagerank-Unimem-subpage-256B-10out 256)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-subpage-512B-10out 512)\t$(DA ../Pagerank/pagerank-count-1k ../Pagerank/pagerank-Unimem-subpage-1k-10out 1024)\t$(DA ../Pagerank/pagerank-count-2k ../Pagerank/pagerank-Unimem-subpage-2k-10out 2048)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Unimem-subpage-4k-10out 4096)" >>  Page-Rank-DA_Figure12_c
 
     echo "generating Average Memory Access Time results of YCSB-A"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > YCSB-A-AMAT_Figure12_d
-    echo -e "AMAT\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-4k-10out)" >> YCSB-A-AMAT_Figure12_d
+    echo -e "AMAT\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-subpage-4k-10out)" >> YCSB-A-AMAT_Figure12_d
     echo "generating Data Amplification results of YCSB-A"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > YCSB-A-DA_Figure12_d
-    echo -e "DA\t$(DA ../YCSB-A/ycsb_a-count-128 ../YCSB-A/ycsb_a-Unimem-subpage-128B-10out 128)\t$(DA ../YCSB-A/ycsb_a-count-256 ../YCSB-A/ycsb_a-Unimem-subpage-256B-10out 256)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-10out 512)\t$(DA ../YCSB-A/ycsb_a-count-1k ../YCSB-A/ycsb_a-Unimem-subpage-1k-10out 1024)\t$(DA ../YCSB-A/ycsb_a-count-2k ../YCSB-A/ycsb_a-Unimem-subpage-2k-10out 2048)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Unimem-subpage-4k-10out 4096)" >>  YCSB-A-DA_Figure12_d
+    echo -e "DA\t$(DA ../YCSB-A/ycsb_a-count-128 ../YCSB-A/ycsb_a-Unimem-subpage-128B-10out 128)\t$(DA ../YCSB-A/ycsb_a-count-256 ../YCSB-A/ycsb_a-Unimem-subpage-256B-10out 256)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-subpage-512B-10out 512)\t$(DA ../YCSB-A/ycsb_a-count-1k ../YCSB-A/ycsb_a-Unimem-subpage-1k-10out 1024)\t$(DA ../YCSB-A/ycsb_a-count-2k ../YCSB-A/ycsb_a-Unimem-subpage-2k-10out 2048)\t$(DA ../YCSB-A/ycsb_a-count-4k ../YCSB-A/ycsb_a-Unimem-subpage-4k-10out 4096)" >>  YCSB-A-DA_Figure12_d
     cd ../
 
     # generating results of Host Memory Capacity(section 4.6 Figure 13)
