@@ -17,17 +17,6 @@ We first install the Intel Pin tool. Second, we install redis, memcached, YCSB, 
 cd tool
 ./setup.sh
 ```
-NOTE: 
-1.You need to execute setup.sh and run.sh in root user.
-
-2.The “setup.sh” script would take a few times.
-
-3.You may need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
-
-4.To compile mutilate correctly, you may need to modify the print statement format in the SConstruct file.
-
-5.When generating memory access sequence of YCSB-A and YCSB-B,a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out error may occur.When this error occurs, you may need to rerun the program several times.
-
 
 ### Run
 First set the environment variables and then run the UniMem.
@@ -37,3 +26,14 @@ cd src
 ```
 The results will be saved in folders named after the experimental section of the paper.
 
+### NOTE: 
+
+1.You need to execute setup.sh and run.sh in root user.
+
+2.The “setup.sh” script would take a few times.
+
+3.You may need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
+
+4.To compile mutilate correctly, you may need to modify the print statement format in the SConstruct file.
+
+5.When generating memory access sequence of YCSB-A and YCSB-B,a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out error may occur.When this error occurs, you may need to rerun the program several times.
