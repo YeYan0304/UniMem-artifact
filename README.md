@@ -22,14 +22,17 @@ cd tool
 
 #### NOTE: 
 
-1. The "setup.sh" script would take a few times.
-2. You may need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
+1. The "setup.sh" script would take a long time.
+2. If the download of dataset is time out, you need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
 ```
 wget https://archive.org/download/asu_twitter_dataset/Twitter-dataset.zip
 mv Twitter-dataset.zip /your/path/atc24-ae/tool/apps/turi/
 unzip Twitter-dataset.zip
 ```
-3. To compile mutilate correctly, you may need to modify the print statement format in the SConstruct file.
+3. If you meet the following error during the compiling of mutilate, you may need to modify all the print in the SConstruct file.
+```
+SyntaxError: Missing parentheses in call to 'print'.
+```
 4. You might get the following error when generating memory access sequence of YCSB-A and YCSB-B: `ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.`When this error occurs, you may need to rerun the program several times.
 
 ### Run
