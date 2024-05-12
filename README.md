@@ -33,7 +33,10 @@ unzip Twitter-dataset.zip
 ```
 SyntaxError: Missing parentheses in call to 'print'.
 ```
-4. You might get the following error when generating memory access sequence of YCSB-A and YCSB-B: `ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.`When this error occurs, you may need to rerun the program several times.
+4. If you meet the following error, you might rerun the script.
+```
+ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.`When this error occurs, you may need to rerun the program several times.
+```
 
 ### Run
 First set the environment variables and then run the UniMem.
