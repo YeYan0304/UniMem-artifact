@@ -49,5 +49,5 @@ cd src
 
 #### NOTE: 
 
-1. The results will be saved in folders named after the experimental section of the paper.
-2. The "run.sh" script would take a few times.
+1. The "run.sh" script would take a long time.
+2. The results will be saved in folders named after the experiment section (Section 4) in the paper.
