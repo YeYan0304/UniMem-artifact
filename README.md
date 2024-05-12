@@ -12,6 +12,7 @@ cd atc24-ae
 ## Setup and Run
 ### Setup
 We first install the Intel Pin tool. Second, we install redis, memcached, YCSB, Mutilate (for Facebook-ETC) for running workloads. We also download the dataset (Twitter-dataset.zip) for Page Rank. Then, we run the workloads with Intel Pin to gather the memory access address and data size.
+
 You need to execute setup.sh in **root** user.
 
 ```
@@ -33,6 +34,7 @@ unzip Twitter-dataset.zip
 
 ### Run
 First set the environment variables and then run the UniMem.
+
 You also need to execute run.sh in **root** user.
 ```
 cd src
