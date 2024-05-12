@@ -1,27 +1,45 @@
-# UniMem
-## 1 Introduction
-This is the implementation of UniMem described in the paper "**UniMem: Redesigning Disaggregated Memory within A Unified Local-Remote Memory Hierarchy**". UniMem is a cache-coherent-based DM system that proposes a unified local-remote memory hierarchy to remove extra indirection layer on remote memory access path.
-We gather the memory access operations, memory address and access data size of the workload using Intel Pin(https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.30-98830-g1d7b601b3-gcc-linux.tar.gz)
+# Paper#51
 
-## 2 Compilation and Run UniMem
-### 2.1 Tools
-UniMem execute Yahoo Cloud Serving Benchmark (YCSB) workloads(http://github.com/brianfrankcooper/YCSB).
-We also take advantage of Kona(https://github.com/project-kona/apps).
+## Instructions
+UniMem is implemented in simulation. We use Intel Pin tool to gather the memory access operations of workloads and simulate their run in our system. The workloads include Facebook-ETC, Redis-Rand, YCSB-A/B, Page Rank and Linear Regression in our experiments. These instructions have been tested on a clean Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-177-generic x86_64).
 
-### 2.2 Compilation
-The GCC version in our environment is 7.5.0.
-The following operations need to be performed under the root user:
+Clone the repository
 ```
-  $ cd tool
-  $ ./setup.sh
-  $ cd ..
+git clone https://github.com/YeYan0304/atc24-ae
+cd atc24-ae
 ```
-You may need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
 
-### 2.3 Run
+## Setup and Run
+### Setup
+We first install the Intel Pin tool. Second, we install redis, memcached, YCSB, Mutilate (for Facebook-ETC) for running workloads. We also download the dataset (Twitter-dataset.zip) for Page Rank. Then, we run the workloads with Intel Pin to gather the memory access address and data size.
+
+```
+cd tool
+./setup.sh
+```
+
+#### NOTE: 
+
+1. You need to execute setup.sh in root user.
+2. The "setup.sh" script would take a few times.
+3. You may need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
+```
+wget https://archive.org/download/asu_twitter_dataset/Twitter-dataset.zip
+mv Twitter-dataset.zip /your/path/atc24-ae/tool/apps/turi/
+unzip Twitter-dataset.zip
+```
+4. To compile mutilate correctly, you may need to modify the print statement format in the SConstruct file.
+5. You might get the following error when generating memory access sequence of YCSB-A and YCSB-B: `ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.`When this error occurs, you may need to rerun the program several times.
+
+### Run
 First set the environment variables and then run the UniMem.
 ```
-  $ cd src
-  $ ./run.sh
+cd src
+./run.sh
 ```
-The results will be saved in folders named after the experimental section of the paper.
+
+#### NOTE: 
+
+1. The results will be saved in folders named after the experimental section of the paper.
+2. You may need to execute run.sh in root user.
+3. The "run.sh" script would take a few times.
