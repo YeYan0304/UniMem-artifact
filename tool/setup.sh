@@ -20,7 +20,7 @@ pid_redis=0
 
     #download mutilate
     git clone https://github.com/leverich/mutilate.git
-    apt-get install scons libevent-dev gengetopt libzmq-dev
+    apt-get install scons libevent-dev gengetopt libzmq3-dev
     cd mutilate/
     scons
     cd ../
