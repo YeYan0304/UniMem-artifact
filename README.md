@@ -29,7 +29,7 @@ wget https://archive.org/download/asu_twitter_dataset/Twitter-dataset.zip
 mv Twitter-dataset.zip /your/path/atc24-ae/tool/apps/turi/
 unzip Twitter-dataset.zip
 ```
-3. If you meet the following error during the compiling of mutilate, you may need to modify all the print in the SConstruct file.
+3. If you meet the following error during the compiling of mutilate, you may need to modify all the print in the tool/mutilate/SConstruct file.
 ```
 SyntaxError: Missing parentheses in call to 'print'.
 ```
