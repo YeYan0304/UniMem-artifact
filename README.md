@@ -36,4 +36,4 @@ The results will be saved in folders named after the experimental section of the
 
 4.To compile mutilate correctly, you may need to modify the print statement format in the SConstruct file.
 
-5.You might get the following error when generating memory access sequence of YCSB-A and YCSB-B: ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.When this error occurs, you may need to rerun the program several times.
+5.You might get the following error when generating memory access sequence of YCSB-A and YCSB-B: 'ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.'When this error occurs, you may need to rerun the program several times.
