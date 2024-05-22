@@ -53,6 +53,7 @@ pid_redis=0
 
     tmux new-session -d -s session1 
     tmux new-session -d -s session2
+    sleep 2s
 
     #Generate memory access sequence of YCSB-A
     tmux send-keys -t session1 'cd YCSB/' C-m
@@ -117,25 +118,22 @@ pid_redis=0
     tmux send-keys -t session1 'cd ../' C-m
     tmux send-keys -t session2 'cd ../' C-m
     
-
     #Generate memory access sequence of Facebook-ETC
     tmux send-keys -t session1 'memcached -m 20480 -u root' C-m
     sleep 2s
-    pid_redis=$(pidof memcached)
-    echo "----------------memcached="$pid_redis" workload="Memcached""
+    pid_memcached=$(pidof memcached | cut -d' ' -f1)
+    echo "----------------memcached="$pid_memcached" workload="Memcached""
 
-    tmux send-keys -t session2 './pintool/pin -pid '$pid_redis' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
+    tmux send-keys -t session2 './pintool/pin -pid '$pid_memcached' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
     tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500000 -u 1' C-m
     # tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1' C-m
 
     tmux send-keys -t session2 'wait' C-m
     tmux send-keys -t session2 'mkdir ../src/Memcache' C-m
     tmux send-keys -t session2 'mv pinatrace.out ../src/Memcache/memcache.out' C-m
-    tmux send-keys -t session2 'kill '$pid_redis'' C-m
+    tmux send-keys -t session2 'kill '$pid_memcached'' C-m
     while :; do
-        pid_redis=$(pidof redis-server)
-        if [[ -z $pid_redis ]]; then
-            echo "continue..."
+        if [ ! kill -0 $pid_memcached 2>/dev/null ]; then
             break
         else
             sleep 1s
