@@ -1,6 +1,6 @@
 #!/bin/bash
-
-MAX_FILE_SIZE=$1
+arg=$1
+MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
 
     #Generate memory access sequence of pagerank 
     cd apps/turi/
@@ -8,7 +8,8 @@ MAX_FILE_SIZE=$1
     sleep 20s
     pid_pagerank=$!
     while :; do
-        if [ ! kill -0 $pid_pagerank 2>/dev/null ]; then
+        if ! kill -0 $pid_pagerank 2>/dev/null; then
+            echo "pagerank finished"
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out")
@@ -16,6 +17,7 @@ MAX_FILE_SIZE=$1
                 kill -9 $pid_pagerank
                 sleep 1s
                 if ! kill -0 $pid_pagerank 2>/dev/null; then
+                    echo "pagerank reach max file size"
                     break
                 fi
             fi
@@ -32,14 +34,16 @@ MAX_FILE_SIZE=$1
     sleep 20s
     pid_pin=$!
     while :; do
-        if [ ! kill -0 $pid_pin 2>/dev/null ]; then
+        if ! kill -0 $pid_pin 2>/dev/null; then
+            echo "linear regression finished"
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out")
             if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_pin
                 sleep 1s
-                if ! kill -0 $pid_pin 2>/dev/null; then
+                if ! kill -0 $pid_pin 2>/dev/null;then
+                    echo "linear regression reach max file size"
                     break
                 fi
             fi
@@ -81,11 +85,12 @@ MAX_FILE_SIZE=$1
     while :; do
         pid_redis=$(pidof redis-server)
         if [[ -z $pid_redis ]]; then
-            echo "continue..."
+            echo "YCSB-A finished"
             break
         else
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out")
             if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+                echo "YCSB-A reach max file size"
                 kill -9 $pid_redis
             fi
             sleep 1s
@@ -115,11 +120,12 @@ MAX_FILE_SIZE=$1
     while :; do
         pid_redis=$(pidof redis-server)
         if [[ -z $pid_redis ]]; then
-            echo "continue..."
+            echo "YCSB-B finished"
             break
         else
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out")
             if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+                echo "YCSB-B reach max file size"
                 kill -9 $pid_redis
             fi
             sleep 1s
@@ -145,16 +151,22 @@ MAX_FILE_SIZE=$1
     tmux send-keys -t session2 'kill '$pid_memcached'' C-m
     sleep 20s
     while :; do
-        FILE_SIZE=$(stat -c%s "pinatrace.out")
-        if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
-            kill -9 $pid_memcached
-            sleep 1s
-            if ! kill -0 $pid_memcached 2>/dev/null; then
-                kill -9 $(pidof mutilate | cut -d' ' -f1)
-                break
+        if ! kill -0 $pid_memcached 2>/dev/null; then
+            echo "memcached finished"
+            break
+        else
+            FILE_SIZE=$(stat -c%s "pinatrace.out")
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+                kill -9 $pid_memcached
+                sleep 1s
+                if ! kill -0 $pid_memcached 2>/dev/null; then
+                    kill -9 $(pidof mutilate | cut -d' ' -f1)
+                    echo "memcached reach max file size"
+                    break
+                fi
             fi
+            sleep 1s
         fi
-        sleep 1s
     done
 
     #Generate memory access sequence of Redis
@@ -175,11 +187,12 @@ MAX_FILE_SIZE=$1
     while :; do
         pid_redis=$(pidof redis-server)
         if [[ -z $pid_redis ]]; then
-            echo "continue..."
+            echo "redis finished"
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out")
             if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+                echo "redis reach max file size"
                 kill -9 $pid_redis
             fi
             sleep 1s
