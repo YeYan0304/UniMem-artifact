@@ -1,11 +1,6 @@
 #!/bin/bash
 
-MAX_PAGERANK_FILE_SIZE=$((100*1024*1024))
-MAX_METIS_FILE_SIZE=$((100*1024*1024))
-MAX_YCSB_A_FILE_SIZE=$((100*1024*1024))
-MAX_YCSB_B_FILE_SIZE=$((100*1024*1024))
-MAX_MEMCACHED_FILE_SIZE=$((100*1024*1024))
-MAX_REDIS_FILE_SIZE=$((100*1024*1024))
+MAX_FILE_SIZE=$1
 
     #Generate memory access sequence of pagerank 
     cd apps/turi/
@@ -17,7 +12,7 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out")
-            if [ "$FILE_SIZE" -gt "$MAX_PAGERANK_FILE_SIZE" ];then
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_pagerank
                 sleep 1s
                 if ! kill -0 $pid_pagerank 2>/dev/null; then
@@ -41,7 +36,7 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out")
-            if [ "$FILE_SIZE" -gt "$MAX_METIS_FILE_SIZE" ];then
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_pin
                 sleep 1s
                 if ! kill -0 $pid_pin 2>/dev/null; then
@@ -90,7 +85,7 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
             break
         else
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out")
-            if [ "$FILE_SIZE" -gt "$MAX_YCSB_A_FILE_SIZE" ];then
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_redis
             fi
             sleep 1s
@@ -124,7 +119,7 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
             break
         else
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out")
-            if [ "$FILE_SIZE" -gt "$MAX_YCSB_B_FILE_SIZE" ];then
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_redis
             fi
             sleep 1s
@@ -141,8 +136,8 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
     echo "----------------memcached="$pid_memcached" workload="Memcached""
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_memcached' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
-    tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500000 -u 1' C-m
-    # tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1' C-m
+    tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 50000000 -u 1 &' C-m
+    # tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
     tmux send-keys -t session2 'mkdir ../src/Memcache' C-m
@@ -150,19 +145,16 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
     tmux send-keys -t session2 'kill '$pid_memcached'' C-m
     sleep 20s
     while :; do
-        if [ ! kill -0 $pid_memcached 2>/dev/null ]; then
-            break
-        else
-            FILE_SIZE=$(stat -c%s "pinatrace.out")
-            if [ "$FILE_SIZE" -gt "$MAX_METIS_FILE_SIZE" ];then
-                kill -9 $pid_memcached
-                sleep 1s
-                if ! kill -0 $pid_memcached 2>/dev/null; then
-                    break
-                fi
-            fi
+        FILE_SIZE=$(stat -c%s "pinatrace.out")
+        if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            kill -9 $pid_memcached
             sleep 1s
+            if ! kill -0 $pid_memcached 2>/dev/null; then
+                kill -9 $(pidof mutilate | cut -d' ' -f1)
+                break
+            fi
         fi
+        sleep 1s
     done
 
     #Generate memory access sequence of Redis
@@ -172,7 +164,7 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
     echo "----------------redis pid="$pid_redis" workload="Redis Rand""
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_redis' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
-    tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 400000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
+    tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 40000000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
     # tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 100 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
@@ -187,7 +179,7 @@ MAX_REDIS_FILE_SIZE=$((100*1024*1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out")
-            if [ "$FILE_SIZE" -gt "$MAX_REDIS_FILE_SIZE" ];then
+            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_redis
             fi
             sleep 1s

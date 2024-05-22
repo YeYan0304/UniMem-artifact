@@ -21,6 +21,7 @@
     git clone https://github.com/leverich/mutilate.git
     apt-get install scons libevent-dev gengetopt libzmq3-dev
     cd mutilate/
+    cp ../source/SConstruct ./
     scons
     cd ../
 

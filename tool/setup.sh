@@ -22,6 +22,7 @@ pid_redis=0
     git clone https://github.com/leverich/mutilate.git
     apt-get install scons libevent-dev gengetopt libzmq3-dev
     cd mutilate/
+    cp ../source/SConstruct ./
     scons
     cd ../
 
@@ -53,7 +54,6 @@ pid_redis=0
 
     tmux new-session -d -s session1 
     tmux new-session -d -s session2
-    sleep 2s
 
     #Generate memory access sequence of YCSB-A
     tmux send-keys -t session1 'cd YCSB/' C-m
@@ -118,6 +118,7 @@ pid_redis=0
     tmux send-keys -t session1 'cd ../' C-m
     tmux send-keys -t session2 'cd ../' C-m
     
+
     #Generate memory access sequence of Facebook-ETC
     tmux send-keys -t session1 'memcached -m 20480 -u root' C-m
     sleep 2s
@@ -125,7 +126,7 @@ pid_redis=0
     echo "----------------memcached="$pid_memcached" workload="Memcached""
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_memcached' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
-    tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500000 -u 1' C-m
+    tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 50000000 -u 1' C-m
     # tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1' C-m
 
     tmux send-keys -t session2 'wait' C-m
@@ -147,7 +148,7 @@ pid_redis=0
     echo "----------------redis pid="$pid_redis" workload="Redis Rand""
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_redis' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
-    tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 400000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
+    tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 40000000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
     # tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 100 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
