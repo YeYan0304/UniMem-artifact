@@ -30,7 +30,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     #Generate memory access sequence of linear_regression
     cd ../metis
     ../../pintool/pin -t ../../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so -- ./Metis/obj/linear_regression ./Metis/data/lr_40GB.txt -p 8 &
-    # ../../pintool/pin -t ../../pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so -- ./Metis/obj/linear_regression ./Metis/data/lr_10MB.txt -p 8 &
     sleep 20s
     pid_pin=$!
     while :; do
@@ -143,7 +142,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_memcached' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
     tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 50000000 -u 1 &' C-m
-    # tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 500 -u 1 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
     tmux send-keys -t session2 'mkdir ../src/Memcache' C-m
@@ -177,7 +175,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_redis' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
     tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 40000000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
-    # tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 100 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
     tmux send-keys -t session2 'mkdir ../src/Redis' C-m
