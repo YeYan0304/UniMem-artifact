@@ -14,6 +14,7 @@
     #download YCSB
     git clone http://github.com/brianfrankcooper/YCSB.git
     cd YCSB
+    apt install maven -y
     mvn -pl site.ycsb:redis-binding -am clean package
     cd ../
 
