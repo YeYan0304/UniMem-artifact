@@ -1,5 +1,6 @@
 #!/bin/bash
 
+    apt install tmux -y
     #download pintool
     wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.30-98830-g1d7b601b3-gcc-linux.tar.gz
     tar -xzf pin-3.30-98830-g1d7b601b3-gcc-linux.tar.gz

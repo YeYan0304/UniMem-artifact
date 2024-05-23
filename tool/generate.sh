@@ -13,7 +13,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
-            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_pagerank
                 sleep 1s
                 if ! kill -0 $pid_pagerank 2>/dev/null; then
@@ -38,7 +38,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
-            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_pin
                 sleep 1s
                 if ! kill -0 $pid_pin 2>/dev/null;then
@@ -88,7 +88,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             break
         else
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out" 2>/dev/null)
-            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "YCSB-A reach max file size"
                 kill -9 $pid_redis
             fi
@@ -123,7 +123,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             break
         else
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out" 2>/dev/null)
-            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "YCSB-B reach max file size"
                 kill -9 $pid_redis
             fi
@@ -154,7 +154,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
-            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_memcached
                 sleep 1s
                 if ! kill -0 $pid_memcached 2>/dev/null; then
@@ -188,7 +188,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
-            if [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "redis reach max file size"
                 kill -9 $pid_redis
             fi
