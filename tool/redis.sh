@@ -30,7 +30,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "redis reach max file size"
                 kill -9 $pid_redis
-                head -n -1 pinatrace.out > temp.out && mv temp.out pinatrace.out
             fi
             sleep 1s
         fi
@@ -41,3 +40,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux kill-session -t "$current_session"
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
+    head -n -1 ../src/Redis/redis.out > temp.out && mv temp.out ../src/Redis/redis.out
