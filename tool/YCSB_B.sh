@@ -60,6 +60,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out" 2>/dev/null)
             if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "YCSB-B reach max file size"
+                head -n -1 ./YCSB/pinatrace.out > ./YCSB/temp.out && mv ./YCSB/temp.out ./YCSB/pinatrace.out
                 kill -9 $pid_redis
             fi
             sleep 1s
