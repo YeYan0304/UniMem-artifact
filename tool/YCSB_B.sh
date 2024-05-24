@@ -27,7 +27,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux send-keys -t session2 'mkdir ../../src/YCSB-B' C-m
     tmux send-keys -t session2 'mv pinatrace.out ../../src/YCSB-B/ycsb_b.out' C-m
     tmux send-keys -t session2 'kill '$pid_redis'' C-m
-    sleep 30s
+    sleep 60s
     while [[ -z $(pidof redis-server) ]]; do
         echo "YCSB-B may finished with error,retry..."
         tmux send-keys -t session1 '../apps/redis/redis/src/redis-server ../apps/redis/redis/redis.conf' C-m
@@ -48,7 +48,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
         tmux send-keys -t session2 'mkdir ../../src/YCSB-B' C-m
         tmux send-keys -t session2 'mv pinatrace.out ../../src/YCSB-B/ycsb_b.out' C-m
         tmux send-keys -t session2 'kill '$pid_redis'' C-m
-        sleep 30s
+        sleep 60s
         done
         
     while :; do
