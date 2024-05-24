@@ -13,7 +13,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     echo "----------------memcached="$pid_memcached" workload="Memcached""
 
     tmux send-keys -t session2 './pintool/pin -pid '$pid_memcached' -t ./pintool/source/tools/ManualExamples/obj-intel64/pinatrace.so &' C-m
-    tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 5000000000 -u 1 &' C-m
+    tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 50000000000 -u 1 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
     tmux send-keys -t session2 'mkdir ../src/Memcache' C-m
