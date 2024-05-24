@@ -29,8 +29,8 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
             if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "redis reach max file size"
-                head -n -1 pinatrace.out > temp.out && mv temp.out pinatrace.out
                 kill -9 $pid_redis
+                head -n -1 pinatrace.out > temp.out && mv temp.out pinatrace.out
             fi
             sleep 1s
         fi
