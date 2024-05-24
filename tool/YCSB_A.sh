@@ -53,19 +53,20 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
         tmux send-keys -t session2 'kill '$pid_redis'' C-m
         sleep 30s
         done
+        
     while :; do
-    pid_redis=$(pidof redis-server)
-    if [[ -z $pid_redis ]]; then
-        echo "YCSB-A finished"
-        break
-    else
-        FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out" 2>/dev/null)
-        if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
-            echo "YCSB-A reach max file size"
-            kill -9 $pid_redis
+        pid_redis=$(pidof redis-server)
+        if [[ -z $pid_redis ]]; then
+            echo "YCSB-A finished"
+            break
+        else
+            FILE_SIZE=$(stat -c%s "./YCSB/pinatrace.out" 2>/dev/null)
+            if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
+                echo "YCSB-A reach max file size"
+                kill -9 $pid_redis
+            fi
+            sleep 1s
         fi
-        sleep 1s
-    fi
     done
 
     sleep 1s
