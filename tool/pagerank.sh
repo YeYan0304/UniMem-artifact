@@ -18,7 +18,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
                 sleep 1s
                 if ! kill -0 $pid_pagerank 2>/dev/null; then
                     echo "pagerank reach max file size"
-                    head -n -1 pinatrace.out > temp.out && mv temp.out pinatrace.out
                     break
                 fi
             fi
@@ -28,3 +27,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     mkdir ../../../src/Pagerank
     mv pinatrace.out ../../../src/Pagerank/pagerank.out
     cd ../../
+    head -n -1 ../src/Pagerank/pagerank.out > temp.out && mv temp.out ../src/Pagerank/pagerank.out
