@@ -303,6 +303,8 @@ int main(int argc, char* argv[])
 		if (fscanf(trace, "%c %llx %u\n", &c, &tmp_num, &tmp_size) == EOF) {
 			break;
 		}
+		if(tmp_size == 0)
+			continue;
 
 		++line;
 
