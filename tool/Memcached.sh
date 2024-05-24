@@ -32,7 +32,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
                 if ! kill -0 $pid_memcached 2>/dev/null; then
                     kill -9 $(pidof mutilate | cut -d' ' -f1)
                     echo "memcached reach max file size"
-                    head -n -1 pinatrace.out > temp.out && mv temp.out pinatrace.out
                     break
                 fi
             fi
@@ -45,3 +44,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux kill-session -t "$current_session"
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
+    head -n -1 ../src/Memcache/memcache.out > temp.out && mv temp.out ../src/Memcache/memcache.out
