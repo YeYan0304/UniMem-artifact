@@ -28,6 +28,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
             if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 kill -9 $pid_memcached
+                head -n -1 pinatrace.out > temp.out && mv temp.out pinatrace.out
                 sleep 1s
                 if ! kill -0 $pid_memcached 2>/dev/null; then
                     kill -9 $(pidof mutilate | cut -d' ' -f1)
