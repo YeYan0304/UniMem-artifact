@@ -21,8 +21,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux send-keys -t session2 'kill '$pid_redis'' C-m
     sleep 20s
     while :; do
-        pid_redis=$(pidof redis-server)
-        if [[ -z $pid_redis ]]; then
+        if ! kill -0 $pid_redis 2>/dev/null; then
             echo "redis finished"
             break
         else
