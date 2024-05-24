@@ -29,3 +29,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     mkdir ../../../src/Metis
     mv pinatrace.out ../../../src/Metis/metis.out
     cd ../../
+    head -n -1 ../src/Metis/metis.out > temp.out && mv temp.out ../src/Metis/metis.out
