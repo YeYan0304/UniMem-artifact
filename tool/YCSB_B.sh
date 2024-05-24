@@ -61,7 +61,6 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
                 echo "YCSB-B reach max file size"
                 kill -9 $pid_redis
-                head -n -1 ./YCSB/pinatrace.out > ./YCSB/temp.out && mv ./YCSB/temp.out ./YCSB/pinatrace.out
             fi
             sleep 1s
         fi
@@ -72,3 +71,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux kill-session -t "$current_session"
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
+    head -n -1 ../src/YCSB-B/ycsb_b.out > temp.out && mv temp.out ../src/YCSB-B/ycsb_b.out
