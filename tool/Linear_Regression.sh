@@ -9,7 +9,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     pid_pin=$!
     while :; do
         if ! kill -0 $pid_pin 2>/dev/null; then
-            echo "linear regression finished"
+            echo "Linear Regression finished"
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
@@ -17,7 +17,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
                 kill -9 $pid_pin
                 sleep 1s
                 if ! kill -0 $pid_pin 2>/dev/null;then
-                    echo "linear regression reach max file size"
+                    echo "Linear Regression reach max file size"
                     break
                 fi
             fi

@@ -22,12 +22,12 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     sleep 20s
     while :; do
         if ! kill -0 $pid_redis 2>/dev/null; then
-            echo "redis finished"
+            echo "Redis Rand finished"
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
             if [ $? -eq 0 ] && [ "$FILE_SIZE" -gt "$MAX_FILE_SIZE" ];then
-                echo "redis reach max file size"
+                echo "Redis Rand reach max file size"
                 kill -9 $pid_redis
             fi
             sleep 1s

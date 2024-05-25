@@ -9,7 +9,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     pid_pagerank=$!
     while :; do
         if ! kill -0 $pid_pagerank 2>/dev/null; then
-            echo "pagerank finished"
+            echo "Page Rank finished"
             break
         else
             FILE_SIZE=$(stat -c%s "pinatrace.out" 2>/dev/null)
@@ -17,7 +17,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
                 kill -9 $pid_pagerank
                 sleep 1s
                 if ! kill -0 $pid_pagerank 2>/dev/null; then
-                    echo "pagerank reach max file size"
+                    echo "Page Rank reach max file size"
                     break
                 fi
             fi
