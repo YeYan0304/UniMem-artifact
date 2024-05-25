@@ -16,8 +16,8 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux send-keys -t session2 './mutilate/mutilate -s '127.0.0.1:11211' -K 'gev:30.7984,8.20449,0.078688' -i 'pareto:0.0,16.0292,0.154971' -r 50000000000 -u 1 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
-    tmux send-keys -t session2 'mkdir ../src/Memcache' C-m
-    tmux send-keys -t session2 'mv pinatrace.out ../src/Memcache/memcache.out' C-m
+    tmux send-keys -t session2 'mkdir ../src/Facebook_ETC' C-m
+    tmux send-keys -t session2 'mv pinatrace.out ../src/Facebook_ETC/Facebook_ETC.out' C-m
     tmux send-keys -t session2 'kill '$pid_memcached'' C-m
     sleep 20s
     while :; do
@@ -45,4 +45,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
     kill $(pidof memcached | cut -d' ' -f1)
-    head -n -1 ../src/Memcache/memcache.out > temp.out && mv temp.out ../src/Memcache/memcache.out
+    head -n -1 ../src/Facebook_ETC/Facebook_ETC.out > temp.out && mv temp.out ../src/Facebook_ETC/Facebook_ETC.out

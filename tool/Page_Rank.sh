@@ -24,7 +24,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
             sleep 1s
         fi
     done
-    mkdir ../../../src/Pagerank
-    mv pinatrace.out ../../../src/Pagerank/pagerank.out
+    mkdir ../../../src/Page_Rank
+    mv pinatrace.out ../../../src/Page_Rank/Page_Rank.out
     cd ../../
-    head -n -1 ../src/Pagerank/pagerank.out > temp.out && mv temp.out ../src/Pagerank/pagerank.out
+    head -n -1 ../src/Page_Rank/Page_Rank.out > temp.out && mv temp.out ../src/Page_Rank/Page_Rank.out

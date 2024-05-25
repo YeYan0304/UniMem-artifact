@@ -12,18 +12,18 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
 
     # generate cache miss sequence of different workloads
     echo "start generate cache miss sequence..."
-    g++ -g -o ./Memcache/l3-cache ./main/L3-Cache.cpp
-    ./Memcache/l3-cache ./Memcache/memcache.out ./Memcache/memcache-cache_miss
-    rm ./Memcache/l3-cache
-    g++ -g -o ./Metis/l3-cache ./main/L3-Cache.cpp
-    ./Metis/l3-cache ./Metis/metis.out ./Metis/metis-cache_miss
-    rm ./Metis/l3-cache
-    g++ -g -o ./Pagerank/l3-cache ./main/L3-Cache.cpp
-    ./Pagerank/l3-cache ./Pagerank/pagerank.out ./Pagerank/pagerank-cache_miss
-    rm ./Pagerank/l3-cache
-    g++ -g -o ./Redis/l3-cache ./main/L3-Cache.cpp
-    ./Redis/l3-cache ./Redis/redis.out ./Redis/redis-cache_miss
-    rm ./Redis/l3-cache
+    g++ -g -o ./Facebook_ETC/l3-cache ./main/L3-Cache.cpp
+    ./Facebook_ETC/l3-cache ./Facebook_ETC/Facebook_ETC.out ./Facebook_ETC/Facebook_ETC-cache_miss
+    rm ./Facebook_ETC/l3-cache
+    g++ -g -o ./Linear_Regression/l3-cache ./main/L3-Cache.cpp
+    ./Linear_Regression/l3-cache ./Linear_Regression/Linear_Regression.out ./Linear_Regression/Linear_Regression-cache_miss
+    rm ./Linear_Regression/l3-cache
+    g++ -g -o ./Page_Rank/l3-cache ./main/L3-Cache.cpp
+    ./Page_Rank/l3-cache ./Page_Rank/Page_Rank.out ./Page_Rank/Page_Rank-cache_miss
+    rm ./Page_Rank/l3-cache
+    g++ -g -o ./Redis_Rand/l3-cache ./main/L3-Cache.cpp
+    ./Redis_Rand/l3-cache ./Redis_Rand/Redis_Rand.out ./Redis_Rand/Redis_Rand-cache_miss
+    rm ./Redis_Rand/l3-cache
     g++ -g -o ./YCSB-A/l3-cache ./main/L3-Cache.cpp
     ./YCSB-A/l3-cache ./YCSB-A/ycsb_a.out ./YCSB-A/ycsb_a-cache_miss
     rm ./YCSB-A/l3-cache
@@ -32,7 +32,7 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     rm ./YCSB-B/l3-cache
     mkdir mix
     g++ -g -o ./mix/l3-cache ./main/L3-Cache-mix.cpp
-    ./mix/l3-cache ./Redis/redis.out ./Memcache/memcache.out ./Pagerank/pagerank.out ./YCSB-A/ycsb_a.out ./mix/mix-cache_miss
+    ./mix/l3-cache ./Redis_Rand/Redis_Rand.out ./Facebook_ETC/Facebook_ETC.out ./Page_Rank/Page_Rank.out ./YCSB-A/ycsb_a.out ./mix/mix-cache_miss
     rm ./mix/l3-cache
     echo "cache miss sequence generated"
 
@@ -50,30 +50,30 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
 	g++ -g -o count-2k ./main/workload-PageCount.cpp
     sed -i "5c #define SUBPAGE 0xfff" ./main/workload-PageCount.cpp
 	g++ -g -o count-4k ./main/workload-PageCount.cpp
-    ./count-4k ./Metis/metis-cache_miss ./Metis/metis-count-4k
-    ./count-512 ./Metis/metis-cache_miss ./Metis/metis-count-512
+    ./count-4k ./Linear_Regression/Linear_Regression-cache_miss ./Linear_Regression/Linear_Regression-count-4k
+    ./count-512 ./Linear_Regression/Linear_Regression-cache_miss ./Linear_Regression/Linear_Regression-count-512
     ./count-4k ./YCSB-B/ycsb_b-cache_miss ./YCSB-B/ycsb_b-count-4k
     ./count-512 ./YCSB-B/ycsb_b-cache_miss ./YCSB-B/ycsb_b-count-512
     ./count-4k ./mix/mix-cache_miss ./mix/mix-count-4k
     ./count-512 ./mix/mix-cache_miss ./mix/mix-count-512
-    ./count-128 ./Redis/redis-cache_miss ./Redis/redis-count-128
-    ./count-256 ./Redis/redis-cache_miss ./Redis/redis-count-256
-    ./count-512 ./Redis/redis-cache_miss ./Redis/redis-count-512
-    ./count-1k ./Redis/redis-cache_miss ./Redis/redis-count-1k
-    ./count-2k ./Redis/redis-cache_miss ./Redis/redis-count-2k
-    ./count-4k ./Redis/redis-cache_miss ./Redis/redis-count-4k
-    ./count-128 ./Memcache/memcache-cache_miss ./Memcache/memcache-count-128
-    ./count-256 ./Memcache/memcache-cache_miss ./Memcache/memcache-count-256
-    ./count-512 ./Memcache/memcache-cache_miss ./Memcache/memcache-count-512
-    ./count-1k ./Memcache/memcache-cache_miss ./Memcache/memcache-count-1k
-    ./count-2k ./Memcache/memcache-cache_miss ./Memcache/memcache-count-2k
-    ./count-4k ./Memcache/memcache-cache_miss ./Memcache/memcache-count-4k
-    ./count-128 ./Pagerank/pagerank-cache_miss ./Pagerank/pagerank-count-128
-    ./count-256 ./Pagerank/pagerank-cache_miss ./Pagerank/pagerank-count-256
-    ./count-512 ./Pagerank/pagerank-cache_miss ./Pagerank/pagerank-count-512
-    ./count-1k ./Pagerank/pagerank-cache_miss ./Pagerank/pagerank-count-1k
-    ./count-2k ./Pagerank/pagerank-cache_miss ./Pagerank/pagerank-count-2k
-    ./count-4k ./Pagerank/pagerank-cache_miss ./Pagerank/pagerank-count-4k
+    ./count-128 ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-128
+    ./count-256 ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-256
+    ./count-512 ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-512
+    ./count-1k ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-1k
+    ./count-2k ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-2k
+    ./count-4k ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-4k
+    ./count-128 ./Facebook_ETC/Facebook_ETC-cache_miss ./Facebook_ETC/Facebook_ETC-count-128
+    ./count-256 ./Facebook_ETC/Facebook_ETC-cache_miss ./Facebook_ETC/Facebook_ETC-count-256
+    ./count-512 ./Facebook_ETC/Facebook_ETC-cache_miss ./Facebook_ETC/Facebook_ETC-count-512
+    ./count-1k ./Facebook_ETC/Facebook_ETC-cache_miss ./Facebook_ETC/Facebook_ETC-count-1k
+    ./count-2k ./Facebook_ETC/Facebook_ETC-cache_miss ./Facebook_ETC/Facebook_ETC-count-2k
+    ./count-4k ./Facebook_ETC/Facebook_ETC-cache_miss ./Facebook_ETC/Facebook_ETC-count-4k
+    ./count-128 ./Page_Rank/Page_Rank-cache_miss ./Page_Rank/Page_Rank-count-128
+    ./count-256 ./Page_Rank/Page_Rank-cache_miss ./Page_Rank/Page_Rank-count-256
+    ./count-512 ./Page_Rank/Page_Rank-cache_miss ./Page_Rank/Page_Rank-count-512
+    ./count-1k ./Page_Rank/Page_Rank-cache_miss ./Page_Rank/Page_Rank-count-1k
+    ./count-2k ./Page_Rank/Page_Rank-cache_miss ./Page_Rank/Page_Rank-count-2k
+    ./count-4k ./Page_Rank/Page_Rank-cache_miss ./Page_Rank/Page_Rank-count-4k
     ./count-128 ./YCSB-A/ycsb_a-cache_miss ./YCSB-A/ycsb_a-count-128
     ./count-256 ./YCSB-A/ycsb_a-cache_miss ./YCSB-A/ycsb_a-count-256
     ./count-512 ./YCSB-A/ycsb_a-cache_miss ./YCSB-A/ycsb_a-count-512
@@ -85,78 +85,78 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
 
     # run Facebook-ETC
     echo "run Facebook-ETC..." 
-    cd Memcache
-    second_line=$(sed -n '2p' memcache-count-128)
-    memcache_128=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' memcache-count-256)
-    memcache_256=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' memcache-count-512)
-    memcache_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' memcache-count-1k)
-    memcache_1k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' memcache-count-2k)
-    memcache_2k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' memcache-count-4k)
-    memcache_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    ../main/run-Page-cache.sh memcache $memcache_4k
-    ../main/run-Kona.sh memcache $memcache_4k
-    ../main/run-Unimem.sh memcache $memcache_512
-    ../main/run-Unimem-LRU-proportion.sh memcache $memcache_512
-    ../main/run-Unimem-nopromote.sh memcache $memcache_512
-    ../main/run-Unimem-set.sh memcache $memcache_512
-    ../main/run-Unimem-subpage.sh memcache $memcache_128 $memcache_256 $memcache_512 $memcache_1k $memcache_2k $memcache_4k
+    cd Facebook_ETC
+    second_line=$(sed -n '2p' Facebook_ETC-count-128)
+    Facebook_ETC_128=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Facebook_ETC-count-256)
+    Facebook_ETC_256=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Facebook_ETC-count-512)
+    Facebook_ETC_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Facebook_ETC-count-1k)
+    Facebook_ETC_1k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Facebook_ETC-count-2k)
+    Facebook_ETC_2k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Facebook_ETC-count-4k)
+    Facebook_ETC_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    ../main/run-Page-cache.sh Facebook_ETC $Facebook_ETC_4k
+    ../main/run-Kona.sh Facebook_ETC $Facebook_ETC_4k
+    ../main/run-Unimem.sh Facebook_ETC $Facebook_ETC_512
+    ../main/run-Unimem-LRU-proportion.sh Facebook_ETC $Facebook_ETC_512
+    ../main/run-Unimem-nopromote.sh Facebook_ETC $Facebook_ETC_512
+    ../main/run-Unimem-set.sh Facebook_ETC $Facebook_ETC_512
+    ../main/run-Unimem-subpage.sh Facebook_ETC $Facebook_ETC_128 $Facebook_ETC_256 $Facebook_ETC_512 $Facebook_ETC_1k $Facebook_ETC_2k $Facebook_ETC_4k
     rm bip-* fifo-* lru-*
     cd ../
     echo "Facebook-ETC finished" 
 
-    # run Redis Rand
-    echo "run Redis Rand..." 
-    cd Redis
-    second_line=$(sed -n '2p' redis-count-128)
+    # run Redis_Rand
+    echo "run Redis_Rand..." 
+    cd Redis_Rand
+    second_line=$(sed -n '2p' Redis_Rand-count-128)
     redis_128=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' redis-count-256)
+    second_line=$(sed -n '2p' Redis_Rand-count-256)
     redis_256=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' redis-count-512)
+    second_line=$(sed -n '2p' Redis_Rand-count-512)
     redis_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' redis-count-1k)
+    second_line=$(sed -n '2p' Redis_Rand-count-1k)
     redis_1k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' redis-count-2k)
+    second_line=$(sed -n '2p' Redis_Rand-count-2k)
     redis_2k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' redis-count-4k)
+    second_line=$(sed -n '2p' Redis_Rand-count-4k)
     redis_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    ../main/run-Page-cache.sh redis $redis_4k
-    ../main/run-Kona.sh redis $redis_4k
-    ../main/run-Unimem.sh redis $redis_512
-    ../main/run-Unimem-LRU-proportion.sh redis $redis_512
-    ../main/run-Unimem-nopromote.sh redis $redis_512
-    ../main/run-Unimem-set.sh redis $redis_512
-    ../main/run-Unimem-subpage.sh redis $redis_128 $redis_256 $redis_512 $redis_1k $redis_2k $redis_4k
+    ../main/run-Page-cache.sh Redis_Rand $redis_4k
+    ../main/run-Kona.sh Redis_Rand $redis_4k
+    ../main/run-Unimem.sh Redis_Rand $redis_512
+    ../main/run-Unimem-LRU-proportion.sh Redis_Rand $redis_512
+    ../main/run-Unimem-nopromote.sh Redis_Rand $redis_512
+    ../main/run-Unimem-set.sh Redis_Rand $redis_512
+    ../main/run-Unimem-subpage.sh Redis_Rand $redis_128 $redis_256 $redis_512 $redis_1k $redis_2k $redis_4k
     rm bip-* fifo-* lru-*
     cd ../
-    echo "Redis Rand finished"
+    echo "Redis_Rand finished"
 
     # run Page Rank
     echo "run Page Rank..." 
-    cd Pagerank
-    second_line=$(sed -n '2p' pagerank-count-128)
-    pagerank_128=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' pagerank-count-256)
-    pagerank_256=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' pagerank-count-512)
-    pagerank_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' pagerank-count-1k)
-    pagerank_1k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' pagerank-count-2k)
-    pagerank_2k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' pagerank-count-4k)
-    pagerank_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    ../main/run-Page-cache.sh pagerank $pagerank_4k
-    ../main/run-Kona.sh pagerank $pagerank_4k
-    ../main/run-Unimem.sh pagerank $pagerank_512
-    ../main/run-Unimem-LRU-proportion.sh pagerank $pagerank_512
-    ../main/run-Unimem-nopromote.sh pagerank $pagerank_512
-    ../main/run-Unimem-set.sh pagerank $pagerank_512
-    ../main/run-Unimem-subpage.sh pagerank $pagerank_128 $pagerank_256 $pagerank_512 $pagerank_1k $pagerank_2k $pagerank_4k
+    cd Page_Rank
+    second_line=$(sed -n '2p' Page_Rank-count-128)
+    Page_Rank_128=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Page_Rank-count-256)
+    Page_Rank_256=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Page_Rank-count-512)
+    Page_Rank_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Page_Rank-count-1k)
+    Page_Rank_1k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Page_Rank-count-2k)
+    Page_Rank_2k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Page_Rank-count-4k)
+    Page_Rank_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    ../main/run-Page-cache.sh Page_Rank $Page_Rank_4k
+    ../main/run-Kona.sh Page_Rank $Page_Rank_4k
+    ../main/run-Unimem.sh Page_Rank $Page_Rank_512
+    ../main/run-Unimem-LRU-proportion.sh Page_Rank $Page_Rank_512
+    ../main/run-Unimem-nopromote.sh Page_Rank $Page_Rank_512
+    ../main/run-Unimem-set.sh Page_Rank $Page_Rank_512
+    ../main/run-Unimem-subpage.sh Page_Rank $Page_Rank_128 $Page_Rank_256 $Page_Rank_512 $Page_Rank_1k $Page_Rank_2k $Page_Rank_4k
     rm bip-* fifo-* lru-*
     cd ../
     echo "Page Rank finished"
@@ -189,15 +189,15 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
 
     # run Linear Regression
     echo "run Linear Regression..." 
-    cd Metis
-    second_line=$(sed -n '2p' metis-count-512)
-    metis_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' metis-count-4k)
-    metis_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    ../main/run-Page-cache.sh metis $metis_4k
-    ../main/run-Kona.sh metis $metis_4k
-    ../main/run-Unimem.sh metis $metis_512
-    ../main/run-Unimem-nopromote.sh metis $metis_512
+    cd Linear_Regression
+    second_line=$(sed -n '2p' Linear_Regression-count-512)
+    Linear_Regression_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    second_line=$(sed -n '2p' Linear_Regression-count-4k)
+    Linear_Regression_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
+    ../main/run-Page-cache.sh Linear_Regression $Linear_Regression_4k
+    ../main/run-Kona.sh Linear_Regression $Linear_Regression_4k
+    ../main/run-Unimem.sh Linear_Regression $Linear_Regression_512
+    ../main/run-Unimem-nopromote.sh Linear_Regression $Linear_Regression_512
     rm bip-* fifo-* lru-*
     cd ../
     echo "Linear Regression finished" 
@@ -346,15 +346,15 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-100out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-75out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-50out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-25out)\t$(Kona_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-10out)" >>  Facebook-ETC_Figure9_a
+    	  echo -e "$i\t$(Kona_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-100out)\t$(Kona_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-75out)\t$(Kona_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-50out)\t$(Kona_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-25out)\t$(Kona_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-10out)" >>  Facebook-ETC_Figure9_a
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-100out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-75out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-50out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-25out)\t$(Kona_PC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Pagecache-10out)" >>  Facebook-ETC_Figure9_a
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Pagecache-100out)\t$(Kona_PC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Pagecache-75out)\t$(Kona_PC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Pagecache-50out)\t$(Kona_PC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Pagecache-25out)\t$(Kona_PC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Pagecache-10out)" >>  Facebook-ETC_Figure9_a
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-100out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-75out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-50out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-25out)\t$(SR_RB_4SC_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Kona-10out)" >>  Facebook-ETC_Figure9_a
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-100out)\t$(SR_RB_4SC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-75out)\t$(SR_RB_4SC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-50out)\t$(SR_RB_4SC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-25out)\t$(SR_RB_4SC_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Kona-10out)" >>  Facebook-ETC_Figure9_a
     elif [[ $i == UniMem-NoPromote ]]; then
-        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-10out)" >>  Facebook-ETC_Figure9_a
+        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-nopromote-10out)" >>  Facebook-ETC_Figure9_a
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-100out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-75out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-50out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-25out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-10out)" >>  Facebook-ETC_Figure9_a
+	    echo -e "$i\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-100out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-75out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-50out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-25out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-10out)" >>  Facebook-ETC_Figure9_a
     fi
     done
     echo "generating Average Memory Access Time results of Redis-Rand"
@@ -362,15 +362,15 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-100out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-75out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-50out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-25out)\t$(Kona_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-10out)" >>  Redis-Rand_Figure9_b
+    	  echo -e "$i\t$(Kona_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-100out)\t$(Kona_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-75out)\t$(Kona_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-50out)\t$(Kona_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-25out)\t$(Kona_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-10out)" >>  Redis-Rand_Figure9_b
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-100out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-75out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-50out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-25out)\t$(Kona_PC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Pagecache-10out)" >>  Redis-Rand_Figure9_b
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Pagecache-100out)\t$(Kona_PC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Pagecache-75out)\t$(Kona_PC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Pagecache-50out)\t$(Kona_PC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Pagecache-25out)\t$(Kona_PC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Pagecache-10out)" >>  Redis-Rand_Figure9_b
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-100out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-75out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-50out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-25out)\t$(SR_RB_4SC_AMAT ../Redis/redis-cache_miss ../Redis/redis-Kona-10out)" >>  Redis-Rand_Figure9_b
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-100out)\t$(SR_RB_4SC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-75out)\t$(SR_RB_4SC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-50out)\t$(SR_RB_4SC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-25out)\t$(SR_RB_4SC_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Kona-10out)" >>  Redis-Rand_Figure9_b
     elif [[ $i == UniMem-NoPromote ]]; then
-        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-10out)" >>  Redis-Rand_Figure9_b
+        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-nopromote-10out)" >>  Redis-Rand_Figure9_b
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-100out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-75out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-50out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-25out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-10out)" >>  Redis-Rand_Figure9_b
+	    echo -e "$i\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-100out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-75out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-50out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-25out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-10out)" >>  Redis-Rand_Figure9_b
     fi
     done
     echo "generating Average Memory Access Time results of YCSB-A"
@@ -410,15 +410,15 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-100out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-75out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-50out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-25out)\t$(Kona_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-10out)" >>  Page-Rank_Figure9_e
+    	  echo -e "$i\t$(Kona_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-100out)\t$(Kona_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-75out)\t$(Kona_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-50out)\t$(Kona_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-25out)\t$(Kona_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-10out)" >>  Page-Rank_Figure9_e
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-100out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-75out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-50out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-25out)\t$(Kona_PC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Pagecache-10out)" >>  Page-Rank_Figure9_e
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Pagecache-100out)\t$(Kona_PC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Pagecache-75out)\t$(Kona_PC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Pagecache-50out)\t$(Kona_PC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Pagecache-25out)\t$(Kona_PC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Pagecache-10out)" >>  Page-Rank_Figure9_e
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-100out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-75out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-50out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-25out)\t$(SR_RB_4SC_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Kona-10out)" >>  Page-Rank_Figure9_e
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-100out)\t$(SR_RB_4SC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-75out)\t$(SR_RB_4SC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-50out)\t$(SR_RB_4SC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-25out)\t$(SR_RB_4SC_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Kona-10out)" >>  Page-Rank_Figure9_e
     elif [[ $i == UniMem-NoPromote ]]; then
-        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-10out)" >>  Page-Rank_Figure9_e
+        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-nopromote-10out)" >>  Page-Rank_Figure9_e
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-100out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-75out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-50out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-25out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-10out)" >>  Page-Rank_Figure9_e
+	    echo -e "$i\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-100out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-75out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-50out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-25out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-10out)" >>  Page-Rank_Figure9_e
     fi
     done
     echo "generating Average Memory Access Time results of Linear-Regression"
@@ -426,15 +426,15 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-100out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-75out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-50out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-25out)\t$(Kona_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-10out)" >>  Linear-Regression_Figure9_f
+    	  echo -e "$i\t$(Kona_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-100out)\t$(Kona_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-75out)\t$(Kona_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-50out)\t$(Kona_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-25out)\t$(Kona_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-10out)" >>  Linear-Regression_Figure9_f
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-100out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-75out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-50out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-25out)\t$(Kona_PC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Pagecache-10out)" >>  Linear-Regression_Figure9_f
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Pagecache-100out)\t$(Kona_PC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Pagecache-75out)\t$(Kona_PC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Pagecache-50out)\t$(Kona_PC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Pagecache-25out)\t$(Kona_PC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Pagecache-10out)" >>  Linear-Regression_Figure9_f
 	elif [[ $i == SR\&RB-4SC ]]; then
-	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-100out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-75out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-50out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-25out)\t$(SR_RB_4SC_AMAT ../Metis/metis-cache_miss ../Metis/metis-Kona-10out)" >>  Linear-Regression_Figure9_f
+	    echo -e "$i\t$(SR_RB_4SC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-100out)\t$(SR_RB_4SC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-75out)\t$(SR_RB_4SC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-50out)\t$(SR_RB_4SC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-25out)\t$(SR_RB_4SC_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Kona-10out)" >>  Linear-Regression_Figure9_f
     elif [[ $i == UniMem-NoPromote ]]; then
-        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-nopromote-10out)" >>  Linear-Regression_Figure9_f
+        echo -e "$i\t$(UniMem_NoPromote_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-nopromote-100out)\t$(UniMem_NoPromote_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-nopromote-75out)\t$(UniMem_NoPromote_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-nopromote-50out)\t$(UniMem_NoPromote_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-nopromote-25out)\t$(UniMem_NoPromote_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-nopromote-10out)" >>  Linear-Regression_Figure9_f
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(UniMem_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-100out)\t$(UniMem_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-75out)\t$(UniMem_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-50out)\t$(UniMem_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-25out)\t$(UniMem_AMAT ../Metis/metis-cache_miss ../Metis/metis-Unimem-10out)" >>  Linear-Regression_Figure9_f
+	    echo -e "$i\t$(UniMem_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-100out)\t$(UniMem_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-75out)\t$(UniMem_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-50out)\t$(UniMem_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-25out)\t$(UniMem_AMAT ../Linear_Regression/Linear_Regression-cache_miss ../Linear_Regression/Linear_Regression-Unimem-10out)" >>  Linear-Regression_Figure9_f
     fi
     done
     cd ../
@@ -449,11 +449,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-100out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-75out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-50out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-25out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Kona-10out 4096)" >>  Facebook-ETC_Figure10_a
+    	echo -e "$i\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Kona-100out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Kona-75out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Kona-50out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Kona-25out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Kona-10out 4096)" >>  Facebook-ETC_Figure10_a
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-100out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-75out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-50out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-25out 4096)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Pagecache-10out 4096)" >>  Facebook-ETC_Figure10_a
+        echo -e "$i\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Pagecache-100out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Pagecache-75out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Pagecache-50out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Pagecache-25out 4096)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Pagecache-10out 4096)" >>  Facebook-ETC_Figure10_a
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-100out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-75out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-50out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-25out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-10out 512)" >>  Facebook-ETC_Figure10_a
+	    echo -e "$i\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-100out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-75out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-50out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-25out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-10out 512)" >>  Facebook-ETC_Figure10_a
     fi
     done
     echo "generating Data Amplification results of Redis-Rand"
@@ -461,11 +461,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-100out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-75out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-50out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-25out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Kona-10out 4096)" >>  Redis-Rand_Figure10_b
+    	echo -e "$i\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Kona-100out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Kona-75out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Kona-50out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Kona-25out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Kona-10out 4096)" >>  Redis-Rand_Figure10_b
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-100out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-75out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-50out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-25out 4096)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Pagecache-10out 4096)" >>  Redis-Rand_Figure10_b
+        echo -e "$i\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Pagecache-100out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Pagecache-75out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Pagecache-50out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Pagecache-25out 4096)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Pagecache-10out 4096)" >>  Redis-Rand_Figure10_b
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-100out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-75out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-50out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-25out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-10out 512)" >>  Redis-Rand_Figure10_b
+	    echo -e "$i\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-100out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-75out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-50out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-25out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-10out 512)" >>  Redis-Rand_Figure10_b
     fi
     done
     echo "generating Data Amplification results of YCSB-A"
@@ -497,11 +497,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-100out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-75out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-50out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-25out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Kona-10out 4096)" >>  Page-Rank_Figure10_e
+    	echo -e "$i\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Kona-100out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Kona-75out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Kona-50out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Kona-25out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Kona-10out 4096)" >>  Page-Rank_Figure10_e
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-100out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-75out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-50out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-25out 4096)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Pagecache-10out 4096)" >>  Page-Rank_Figure10_e
+        echo -e "$i\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Pagecache-100out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Pagecache-75out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Pagecache-50out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Pagecache-25out 4096)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Pagecache-10out 4096)" >>  Page-Rank_Figure10_e
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-100out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-75out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-50out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-25out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-10out 512)" >>  Page-Rank_Figure10_e
+	    echo -e "$i\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-100out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-75out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-50out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-25out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-10out 512)" >>  Page-Rank_Figure10_e
     fi
     done
     echo "generating Data Amplification results of Linear-Regression"
@@ -509,11 +509,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-100out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-75out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-50out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-25out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Kona-10out 4096)" >>   Linear-Regression_Figure10_f
+    	echo -e "$i\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Kona-100out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Kona-75out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Kona-50out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Kona-25out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Kona-10out 4096)" >>   Linear-Regression_Figure10_f
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-100out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-75out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-50out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-25out 4096)\t$(DA ../Metis/metis-count-4k ../Metis/metis-Pagecache-10out 4096)" >>   Linear-Regression_Figure10_f
+        echo -e "$i\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Pagecache-100out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Pagecache-75out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Pagecache-50out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Pagecache-25out 4096)\t$(DA ../Linear_Regression/Linear_Regression-count-4k ../Linear_Regression/Linear_Regression-Pagecache-10out 4096)" >>   Linear-Regression_Figure10_f
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-100out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-75out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-50out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-25out 512)\t$(DA ../Metis/metis-count-512 ../Metis/metis-Unimem-10out 512)" >>   Linear-Regression_Figure10_f
+	    echo -e "$i\t$(DA ../Linear_Regression/Linear_Regression-count-512 ../Linear_Regression/Linear_Regression-Unimem-100out 512)\t$(DA ../Linear_Regression/Linear_Regression-count-512 ../Linear_Regression/Linear_Regression-Unimem-75out 512)\t$(DA ../Linear_Regression/Linear_Regression-count-512 ../Linear_Regression/Linear_Regression-Unimem-50out 512)\t$(DA ../Linear_Regression/Linear_Regression-count-512 ../Linear_Regression/Linear_Regression-Unimem-25out 512)\t$(DA ../Linear_Regression/Linear_Regression-count-512 ../Linear_Regression/Linear_Regression-Unimem-10out 512)" >>   Linear-Regression_Figure10_f
     fi
     done
     cd ../
@@ -555,24 +555,24 @@ DA(){
     cd 4.5_Cache_Block_Size_Figure12
     echo "generating Average Memory Access Time results of Redis-Rand"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Redis-Rand-AMAT_Figure12_a
-    echo -e "AMAT\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-subpage-4k-10out)" >> Redis-Rand-AMAT_Figure12_a
+    echo -e "AMAT\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-subpage-4k-10out)" >> Redis-Rand-AMAT_Figure12_a
     echo "generating Data Amplification results of Redis-Rand"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Redis-Rand-DA_Figure12_a
-    echo -e "DA\t$(DA ../Redis/redis-count-128 ../Redis/redis-Unimem-subpage-128B-10out 128)\t$(DA ../Redis/redis-count-256 ../Redis/redis-Unimem-subpage-256B-10out 256)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-subpage-512B-10out 512)\t$(DA ../Redis/redis-count-1k ../Redis/redis-Unimem-subpage-1k-10out 1024)\t$(DA ../Redis/redis-count-2k ../Redis/redis-Unimem-subpage-2k-10out 2048)\t$(DA ../Redis/redis-count-4k ../Redis/redis-Unimem-subpage-4k-10out 4096)" >>  Redis-Rand-DA_Figure12_a
+    echo -e "DA\t$(DA ../Redis_Rand/Redis_Rand-count-128 ../Redis_Rand/Redis_Rand-Unimem-subpage-128B-10out 128)\t$(DA ../Redis_Rand/Redis_Rand-count-256 ../Redis_Rand/Redis_Rand-Unimem-subpage-256B-10out 256)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-subpage-512B-10out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-1k ../Redis_Rand/Redis_Rand-Unimem-subpage-1k-10out 1024)\t$(DA ../Redis_Rand/Redis_Rand-count-2k ../Redis_Rand/Redis_Rand-Unimem-subpage-2k-10out 2048)\t$(DA ../Redis_Rand/Redis_Rand-count-4k ../Redis_Rand/Redis_Rand-Unimem-subpage-4k-10out 4096)" >>  Redis-Rand-DA_Figure12_a
     
     echo "generating Average Memory Access Time results of Facebook-ETC"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Facebook-ETC-AMAT_Figure12_b
-    echo -e "AMAT\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-subpage-4k-10out)" >> Facebook-ETC-AMAT_Figure12_b
+    echo -e "AMAT\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-subpage-4k-10out)" >> Facebook-ETC-AMAT_Figure12_b
     echo "generating Data Amplification results of Facebook-ETC"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Facebook-ETC-DA_Figure12_b
-    echo -e "DA\t$(DA ../Memcache/memcache-count-128 ../Memcache/memcache-Unimem-subpage-128B-10out 128)\t$(DA ../Memcache/memcache-count-256 ../Memcache/memcache-Unimem-subpage-256B-10out 256)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-subpage-512B-10out 512)\t$(DA ../Memcache/memcache-count-1k ../Memcache/memcache-Unimem-subpage-1k-10out 1024)\t$(DA ../Memcache/memcache-count-2k ../Memcache/memcache-Unimem-subpage-2k-10out 2048)\t$(DA ../Memcache/memcache-count-4k ../Memcache/memcache-Unimem-subpage-4k-10out 4096)" >>  Facebook-ETC-DA_Figure12_b
+    echo -e "DA\t$(DA ../Facebook_ETC/Facebook_ETC-count-128 ../Facebook_ETC/Facebook_ETC-Unimem-subpage-128B-10out 128)\t$(DA ../Facebook_ETC/Facebook_ETC-count-256 ../Facebook_ETC/Facebook_ETC-Unimem-subpage-256B-10out 256)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-subpage-512B-10out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-1k ../Facebook_ETC/Facebook_ETC-Unimem-subpage-1k-10out 1024)\t$(DA ../Facebook_ETC/Facebook_ETC-count-2k ../Facebook_ETC/Facebook_ETC-Unimem-subpage-2k-10out 2048)\t$(DA ../Facebook_ETC/Facebook_ETC-count-4k ../Facebook_ETC/Facebook_ETC-Unimem-subpage-4k-10out 4096)" >>  Facebook-ETC-DA_Figure12_b
 
     echo "generating Average Memory Access Time results of Page-Rank"  
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Page-Rank-AMAT_Figure12_c
-    echo -e "AMAT\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-subpage-4k-10out)" >> Page-Rank-AMAT_Figure12_c
+    echo -e "AMAT\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-subpage-128B-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-subpage-256B-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-subpage-512B-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-subpage-1k-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-subpage-2k-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-subpage-4k-10out)" >> Page-Rank-AMAT_Figure12_c
     echo "generating Data Amplification results of Page-Rank"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > Page-Rank-DA_Figure12_c
-    echo -e "DA\t$(DA ../Pagerank/pagerank-count-128 ../Pagerank/pagerank-Unimem-subpage-128B-10out 128)\t$(DA ../Pagerank/pagerank-count-256 ../Pagerank/pagerank-Unimem-subpage-256B-10out 256)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-subpage-512B-10out 512)\t$(DA ../Pagerank/pagerank-count-1k ../Pagerank/pagerank-Unimem-subpage-1k-10out 1024)\t$(DA ../Pagerank/pagerank-count-2k ../Pagerank/pagerank-Unimem-subpage-2k-10out 2048)\t$(DA ../Pagerank/pagerank-count-4k ../Pagerank/pagerank-Unimem-subpage-4k-10out 4096)" >>  Page-Rank-DA_Figure12_c
+    echo -e "DA\t$(DA ../Page_Rank/Page_Rank-count-128 ../Page_Rank/Page_Rank-Unimem-subpage-128B-10out 128)\t$(DA ../Page_Rank/Page_Rank-count-256 ../Page_Rank/Page_Rank-Unimem-subpage-256B-10out 256)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-subpage-512B-10out 512)\t$(DA ../Page_Rank/Page_Rank-count-1k ../Page_Rank/Page_Rank-Unimem-subpage-1k-10out 1024)\t$(DA ../Page_Rank/Page_Rank-count-2k ../Page_Rank/Page_Rank-Unimem-subpage-2k-10out 2048)\t$(DA ../Page_Rank/Page_Rank-count-4k ../Page_Rank/Page_Rank-Unimem-subpage-4k-10out 4096)" >>  Page-Rank-DA_Figure12_c
 
     echo "generating Average Memory Access Time results of YCSB-A"
     echo -e "cache_block_size\t128B\t256B\t512B\t1KB\t2KB\t4KB" > YCSB-A-AMAT_Figure12_d
@@ -587,9 +587,9 @@ DA(){
     mkdir  4.6_Host_Memory_Capacity_Figure13
     cd 4.6_Host_Memory_Capacity_Figure13
     echo -e "host_memory_capacity\t0\t10%\t20%\t30%\t40%\t50%\t60%\t70%\t80%" > Host_Memory_Capacity-AMAT_Figure13
-    echo -e "Redis-Rand\t$(UniMem_NoPromote_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-9-1-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-8-2-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-7-3-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-6-4-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-5-5-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-4-6-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-3-7-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
-    echo -e "Page-Rank\t$(UniMem_NoPromote_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-9-1-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-8-2-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-7-3-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-6-4-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-5-5-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-4-6-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-3-7-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
-    echo -e "Facebook-ETC\t$(UniMem_NoPromote_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-9-1-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-8-2-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-7-3-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-6-4-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-5-5-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-4-6-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-3-7-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
+    echo -e "Redis-Rand\t$(UniMem_NoPromote_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-9-1-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-8-2-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-7-3-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-6-4-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-5-5-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-4-6-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-3-7-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
+    echo -e "Page-Rank\t$(UniMem_NoPromote_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-9-1-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-8-2-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-7-3-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-6-4-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-5-5-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-4-6-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-3-7-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
+    echo -e "Facebook-ETC\t$(UniMem_NoPromote_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-nopromote-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-9-1-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-8-2-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-7-3-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-6-4-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-5-5-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-4-6-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-3-7-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
     echo -e "YCSB-A\t$(UniMem_NoPromote_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-nopromote-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-9-1-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-8-2-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-7-3-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-6-4-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-5-5-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-4-6-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-3-7-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-2-8-10out)" >> Host_Memory_Capacity-AMAT_Figure13
     cd ../
 
@@ -598,15 +598,15 @@ DA(){
     mkdir 4.7_Set_Associativity_Figure14
     cd 4.7_Set_Associativity_Figure14
     echo -e "Set Associativity\t1\t4\t8\t16" > Set_Associativity-AMAT_Figure14_a
-    echo -e "Redis-Rand\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-4set-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-8set-10out)\t$(UniMem_AMAT ../Redis/redis-cache_miss ../Redis/redis-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
-    echo -e "Facebook-ETC\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-4set-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-8set-10out)\t$(UniMem_AMAT ../Memcache/memcache-cache_miss ../Memcache/memcache-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
-    echo -e "Page-Rank\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-4set-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-8set-10out)\t$(UniMem_AMAT ../Pagerank/pagerank-cache_miss ../Pagerank/pagerank-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
+    echo -e "Redis-Rand\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-4set-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-8set-10out)\t$(UniMem_AMAT ../Redis_Rand/Redis_Rand-cache_miss ../Redis_Rand/Redis_Rand-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
+    echo -e "Facebook-ETC\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-4set-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-8set-10out)\t$(UniMem_AMAT ../Facebook_ETC/Facebook_ETC-cache_miss ../Facebook_ETC/Facebook_ETC-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
+    echo -e "Page-Rank\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-4set-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-8set-10out)\t$(UniMem_AMAT ../Page_Rank/Page_Rank-cache_miss ../Page_Rank/Page_Rank-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
     echo -e "YCSB-A\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-4set-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-8set-10out)\t$(UniMem_AMAT ../YCSB-A/ycsb_a-cache_miss ../YCSB-A/ycsb_a-Unimem-16set-10out)" >> Set_Associativity-AMAT_Figure14_a
 
     echo -e "Set Associativity\t1\t4\t8\t16" > Set_Associativity-DA_Figure14_b
-    echo -e "Redis-Rand\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-10out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-4set-10out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-8set-10out 512)\t$(DA ../Redis/redis-count-512 ../Redis/redis-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
-    echo -e "Facebook-ETC\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-10out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-4set-10out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-8set-10out 512)\t$(DA ../Memcache/memcache-count-512 ../Memcache/memcache-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
-    echo -e "Page-Rank\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-10out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-4set-10out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-8set-10out 512)\t$(DA ../Pagerank/pagerank-count-512 ../Pagerank/pagerank-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
+    echo -e "Redis-Rand\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-10out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-4set-10out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-8set-10out 512)\t$(DA ../Redis_Rand/Redis_Rand-count-512 ../Redis_Rand/Redis_Rand-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
+    echo -e "Facebook-ETC\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-10out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-4set-10out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-8set-10out 512)\t$(DA ../Facebook_ETC/Facebook_ETC-count-512 ../Facebook_ETC/Facebook_ETC-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
+    echo -e "Page-Rank\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-10out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-4set-10out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-8set-10out 512)\t$(DA ../Page_Rank/Page_Rank-count-512 ../Page_Rank/Page_Rank-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
     echo -e "YCSB-A\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-10out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-4set-10out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-8set-10out 512)\t$(DA ../YCSB-A/ycsb_a-count-512 ../YCSB-A/ycsb_a-Unimem-16set-10out 512)" >>  Set_Associativity-DA_Figure14_b
     cd ../
 

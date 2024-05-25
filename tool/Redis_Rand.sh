@@ -16,8 +16,8 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux send-keys -t session2 'memtier_benchmark -p 6379 -t 10 -n 40000000 --ratio 1:1 -c 20 -x 1 --key-pattern R:R --hide-histogram --distinct-client-seed -d 300 --pipeline=1000 &' C-m
 
     tmux send-keys -t session2 'wait' C-m
-    tmux send-keys -t session2 'mkdir ../src/Redis' C-m
-    tmux send-keys -t session2 'mv pinatrace.out ../src/Redis/redis.out' C-m
+    tmux send-keys -t session2 'mkdir ../src/Redis_Rand' C-m
+    tmux send-keys -t session2 'mv pinatrace.out ../src/Redis_Rand/Redis_Rand.out' C-m
     tmux send-keys -t session2 'kill '$pid_redis'' C-m
     sleep 20s
     while :; do
@@ -39,4 +39,4 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux kill-session -t "$current_session"
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
-    head -n -1 ../src/Redis/redis.out > temp.out && mv temp.out ../src/Redis/redis.out
+    head -n -1 ../src/Redis_Rand/Redis_Rand.out > temp.out && mv temp.out ../src/Redis_Rand/Redis_Rand.out

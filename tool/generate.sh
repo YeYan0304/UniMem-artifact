@@ -1,13 +1,13 @@
 #!/bin/bash
 arg=$1
 
-    ./pagerank.sh $arg
+    ./Page_Rank.sh $arg
     sleep 2s
-    ./linear_regression.sh $arg
+    ./Linear_Regression.sh $arg
     sleep 2s
-    ./redis.sh $arg
+    ./Redis_Rand.sh $arg
     sleep 2s
-    ./Memcached.sh $arg
+    ./Facebook_ETC.sh $arg
     sleep 2s
     ./YCSB_A.sh $arg
     sleep 2s

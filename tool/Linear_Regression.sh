@@ -25,7 +25,7 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
         fi
     done
     
-    mkdir ../../../src/Metis
-    mv pinatrace.out ../../../src/Metis/metis.out
+    mkdir ../../../src/Linear_Regression
+    mv pinatrace.out ../../../src/Linear_Regression/Linear_Regression.out
     cd ../../
-    head -n -1 ../src/Metis/metis.out > temp.out && mv temp.out ../src/Metis/metis.out
+    head -n -1 ../src/Linear_Regression/Linear_Regression.out > temp.out && mv temp.out ../src/Linear_Regression/Linear_Regression.out
