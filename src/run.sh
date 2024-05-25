@@ -30,10 +30,10 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     g++ -g -o ./YCSB-B/l3-cache ./main/L3-Cache.cpp
     ./YCSB-B/l3-cache ./YCSB-B/ycsb_b.out ./YCSB-B/ycsb_b-cache_miss
     rm ./YCSB-B/l3-cache
-    mkdir mix
-    g++ -g -o ./mix/l3-cache ./main/L3-Cache-mix.cpp
-    ./mix/l3-cache ./Redis_Rand/Redis_Rand.out ./Facebook_ETC/Facebook_ETC.out ./Page_Rank/Page_Rank.out ./YCSB-A/ycsb_a.out ./mix/mix-cache_miss
-    rm ./mix/l3-cache
+    mkdir Mixed_Workload
+    g++ -g -o ./Mixed_Workload/l3-cache ./main/L3-Cache-Mixed_Workload.cpp
+    ./Mixed_Workload/l3-cache ./Redis_Rand/Redis_Rand.out ./Facebook_ETC/Facebook_ETC.out ./Page_Rank/Page_Rank.out ./YCSB-A/ycsb_a.out ./Mixed_Workload/Mixed_Workload-cache_miss
+    rm ./Mixed_Workload/l3-cache
     echo "cache miss sequence generated"
 
     # count the number of pages under different subpages
@@ -54,8 +54,8 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
     ./count-512 ./Linear_Regression/Linear_Regression-cache_miss ./Linear_Regression/Linear_Regression-count-512
     ./count-4k ./YCSB-B/ycsb_b-cache_miss ./YCSB-B/ycsb_b-count-4k
     ./count-512 ./YCSB-B/ycsb_b-cache_miss ./YCSB-B/ycsb_b-count-512
-    ./count-4k ./mix/mix-cache_miss ./mix/mix-count-4k
-    ./count-512 ./mix/mix-cache_miss ./mix/mix-count-512
+    ./count-4k ./Mixed_Workload/Mixed_Workload-cache_miss ./Mixed_Workload/Mixed_Workload-count-4k
+    ./count-512 ./Mixed_Workload/Mixed_Workload-cache_miss ./Mixed_Workload/Mixed_Workload-count-512
     ./count-128 ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-128
     ./count-256 ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-256
     ./count-512 ./Redis_Rand/Redis_Rand-cache_miss ./Redis_Rand/Redis_Rand-count-512
@@ -219,14 +219,14 @@ Batch_Promote_latency=$(echo "scale=2; 1987 / 512" | bc)
 
     # run mixed workload
     echo "run mixed workload..." 
-    cd mix
-    second_line=$(sed -n '2p' mix-count-512)
+    cd Mixed_Workload
+    second_line=$(sed -n '2p' Mixed_Workload-count-512)
     mix_512=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    second_line=$(sed -n '2p' mix-count-4k)
+    second_line=$(sed -n '2p' Mixed_Workload-count-4k)
     mix_4k=$(echo "$second_line" | awk -F ':' '{print $2}' | tr -d '[:space:]')
-    ../main/run-Page-cache.sh mix $mix_4k
-    ../main/run-Kona.sh mix $mix_4k
-    ../main/run-Unimem.sh mix $mix_512
+    ../main/run-Page-cache.sh Mixed_Workload $mix_4k
+    ../main/run-Kona.sh Mixed_Workload $mix_4k
+    ../main/run-Unimem.sh Mixed_Workload $mix_512
     rm bip-* fifo-* lru-*
     cd ../
     echo "mixed workload finished"
@@ -528,11 +528,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	  echo -e "$i\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-100out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-75out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-50out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-25out)\t$(Kona_AMAT ../mix/mix-cache_miss ../mix/mix-Kona-10out)" >>  AMAT_Figure11_a
+    	  echo -e "$i\t$(Kona_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Kona-100out)\t$(Kona_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Kona-75out)\t$(Kona_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Kona-50out)\t$(Kona_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Kona-25out)\t$(Kona_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Kona-10out)" >>  AMAT_Figure11_a
 	elif [[ $i == Kona-PC ]]; then
-    	  echo -e "$i\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-100out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-75out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-50out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-25out)\t$(Kona_PC_AMAT ../mix/mix-cache_miss ../mix/mix-Pagecache-10out)" >>  AMAT_Figure11_a
+    	  echo -e "$i\t$(Kona_PC_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Pagecache-100out)\t$(Kona_PC_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Pagecache-75out)\t$(Kona_PC_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Pagecache-50out)\t$(Kona_PC_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Pagecache-25out)\t$(Kona_PC_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Pagecache-10out)" >>  AMAT_Figure11_a
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-100out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-75out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-50out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-25out)\t$(UniMem_AMAT ../mix/mix-cache_miss ../mix/mix-Unimem-10out)" >>  AMAT_Figure11_a
+	    echo -e "$i\t$(UniMem_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Unimem-100out)\t$(UniMem_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Unimem-75out)\t$(UniMem_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Unimem-50out)\t$(UniMem_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Unimem-25out)\t$(UniMem_AMAT ../Mixed_Workload/Mixed_Workload-cache_miss ../Mixed_Workload/Mixed_Workload-Unimem-10out)" >>  AMAT_Figure11_a
     fi
     done
     echo "generating Data Amplification results of Mixed Workload"
@@ -540,11 +540,11 @@ DA(){
     for i in ${systems[@]}
     do
 	if [[ $i == Kona ]]; then
-    	echo -e "$i\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-100out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-75out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-50out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-25out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Kona-10out 4096)" >>  DA_Figure11_b
+    	echo -e "$i\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Kona-100out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Kona-75out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Kona-50out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Kona-25out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Kona-10out 4096)" >>  DA_Figure11_b
 	elif [[ $i == Kona-PC ]]; then
-        echo -e "$i\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-100out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-75out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-50out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-25out 4096)\t$(DA ../mix/mix-count-4k ../mix/mix-Pagecache-10out 4096)" >>  DA_Figure11_b
+        echo -e "$i\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Pagecache-100out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Pagecache-75out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Pagecache-50out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Pagecache-25out 4096)\t$(DA ../Mixed_Workload/Mixed_Workload-count-4k ../Mixed_Workload/Mixed_Workload-Pagecache-10out 4096)" >>  DA_Figure11_b
 	elif [[ $i == UniMem ]]; then
-	    echo -e "$i\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-100out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-75out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-50out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-25out 512)\t$(DA ../mix/mix-count-512 ../mix/mix-Unimem-10out 512)" >>  DA_Figure11_b
+	    echo -e "$i\t$(DA ../Mixed_Workload/Mixed_Workload-count-512 ../Mixed_Workload/Mixed_Workload-Unimem-100out 512)\t$(DA ../Mixed_Workload/Mixed_Workload-count-512 ../Mixed_Workload/Mixed_Workload-Unimem-75out 512)\t$(DA ../Mixed_Workload/Mixed_Workload-count-512 ../Mixed_Workload/Mixed_Workload-Unimem-50out 512)\t$(DA ../Mixed_Workload/Mixed_Workload-count-512 ../Mixed_Workload/Mixed_Workload-Unimem-25out 512)\t$(DA ../Mixed_Workload/Mixed_Workload-count-512 ../Mixed_Workload/Mixed_Workload-Unimem-10out 512)" >>  DA_Figure11_b
     fi
     done
     cd ../
