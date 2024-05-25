@@ -1,5 +1,6 @@
 #!/bin/bash
-
+    apt install python2 -y
+    apt install python-is-python2 -y
     apt install tmux -y
     apt install memcached -y
     #download pintool
