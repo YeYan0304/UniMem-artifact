@@ -44,4 +44,5 @@ MAX_FILE_SIZE=$((arg * 1024 * 1024 * 1024))
     tmux kill-session -t "$current_session"
     current_session=$(tmux display-message -p '#S')
     tmux kill-session -t "$current_session"
+    kill $(pidof memcached)
     head -n -1 ../src/Memcache/memcache.out > temp.out && mv temp.out ../src/Memcache/memcache.out
