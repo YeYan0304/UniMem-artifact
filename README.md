@@ -13,37 +13,41 @@ cd atc24-ae
 ### Setup
 We first install the Intel Pin tool. Second, we install redis, memcached, YCSB, Mutilate (for Facebook-ETC) for running workloads. We also download the dataset (Twitter-dataset.zip) for Page Rank. Then, we run the workloads with Intel Pin to gather the memory access address and data size.
 
-You need to execute setup.sh in **root** user.
+You need to execute build.sh in **root** user.
 
 ```
 cd tool
+./build.sh
+```
+
+Then you need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
+
+```
+cd apps/turi/
+wget https://archive.org/download/asu_twitter_dataset/Twitter-dataset.zip
+unzip Twitter-dataset.zip
+cd ../scripts
 ./setup.sh
+```
+
+Now you can execute generate.sh to generate sequences of memory accesses with different workloads. You also need to execute generate.sh in **root** user.
+
+```
+cd /atc24-ae/tool/
+# The parameter limits the maximum output file size in 10 GB for each workload.
+./generate.sh 10
 ```
 
 #### NOTE: 
 
-1. The "setup.sh" script would take a long time.
-2. If the download of dataset is time out, you need to manually download the Twitter-dataset and unzip it in the tool/apps/turi/ folder.
-```
-wget https://archive.org/download/asu_twitter_dataset/Twitter-dataset.zip
-mv Twitter-dataset.zip /your/path/atc24-ae/tool/apps/turi/
-unzip Twitter-dataset.zip
-```
-3. If you meet the following error during the compiling of mutilate, you may need to modify all the print in the tool/mutilate/SConstruct file.
-```
-SyntaxError: Missing parentheses in call to 'print'.
-```
-4. If you meet the following error, you might rerun the script.
-```
-ERROR: a redis.clients.jedis.exceptions.JedisConnectionException: java.net.SocketTimeoutException: Read timed out.
-```
+1. The "generate.sh" script would take a long time.
 
 ### Run
 First set the environment variables and then run the UniMem.
 
 You also need to execute run.sh in **root** user.
 ```
-cd src
+cd /atc24-ae/src/
 ./run.sh
 ```
 
